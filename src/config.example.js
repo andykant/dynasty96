@@ -6,5 +6,11 @@ export default {
 	// Port
 	port: 80,
 	// Dev port
-	devPort: 8080
+	devPort: 8080,
+	// MFL league
+	league: 0,
+	// MFL year
+	year: 2016,
+	// Positions
+	positions: ["QB","RB","WR","TE"]
 };

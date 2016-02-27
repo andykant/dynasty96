@@ -1,7 +1,7 @@
 {
 	"verbose": true,
 	"events": {
-		"restart": "./node_modules/.bin/babel src -d lib"
+		"restart": "./node_modules/.bin/babel src -d lib; sleep 1"
 	},
 	"watch": [
 		"src"

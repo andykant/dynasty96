@@ -7,6 +7,7 @@ import webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import config from "./config";
 import webpackConfig from "./webpack.config";
+import mfl from "./mfl";
 
 // Initialize webpack bundle
 var compiler = webpack(webpackConfig, ready);
@@ -16,6 +17,12 @@ if (config.env === "dev") {
 		hot: true
 	});
 	bundler.listen(config.devPort, config.hostname);
+}
+
+// Initialize data directory
+var data = path.join(__dirname, "../data");
+if (!fs.existsSync(data)) {
+	fs.mkdirSync(data);
 }
 
 function ready() {
@@ -28,6 +35,17 @@ function ready() {
 		// Do stuff
 	}));
 	app.use(feathers.static(path.join(__dirname, "../src/public")));
+	
+	// Load MFL data
+	var data = {};
+	var update = (type, json) => { data[type] = json[type] };
+	mfl("league", (body) => body.league.franchises.franchise, update);
+	mfl("players", (body) => body.players.player.filter(
+		(player) => config.positions.indexOf(player.position) > -1
+	), update);
+	mfl("draftResults", (body) => body.draftResults.draftUnit.draftPick.map(
+		(pick) => { pick.timestamp = parseInt(pick.timestamp,10) || 0; return pick; }
+	), update, 10*60*1000);
 
 	// Link webpack bundle
 	if (config.env === "dev") {
