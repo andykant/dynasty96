@@ -1,0 +1,29 @@
+{
+  "name": "dynasty96",
+  "version": "1.0.0",
+  "description": "Dynasty96 dynasty fantasy tools",
+  "main": "lib/index.js",
+  "private": true,
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.5.0",
+    "react": "^0.14.7",
+    "webpack": "^1.12.14"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "./node_modules/.bin/babel src -d lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andykant/dynasty96.git"
+  },
+  "author": "Andy Kant <andy@andykant.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andykant/dynasty96/issues"
+  },
+  "homepage": "https://github.com/andykant/dynasty96#readme"
+}
