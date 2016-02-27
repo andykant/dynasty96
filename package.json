@@ -25,8 +25,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "prestart": "rm -rf lib; ./node_modules/.bin/babel src -d lib",
-    "predev": "rm -rf lib; ./node_modules/.bin/babel src -d lib",
+    "prestart": "./node_modules/.bin/babel src -d lib",
+    "predev": "./node_modules/.bin/babel src -d lib",
     "start": "node lib/index.js",
     "dev": "nodemon lib/index.js"
   },

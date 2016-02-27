@@ -11,7 +11,10 @@ import webpackConfig from "./webpack.config";
 // Initialize webpack bundle
 var compiler = webpack(webpackConfig, ready);
 if (config.env === "dev") {
-	var bundler = new WebpackDevServer(compiler);
+	var bundler = new WebpackDevServer(compiler, {
+		publicPath: "/bundle/",
+		hot: true
+	});
 	bundler.listen(config.devPort, config.hostname);
 }
 
@@ -29,7 +32,7 @@ function ready() {
 	// Link webpack bundle
 	if (config.env === "dev") {
 		var proxy = httpProxy.createProxyServer();
-		app.use("/bundle/*", (req, res) => {
+		app.all("/bundle/*", (req, res) => {
 			proxy.web(req, res, {
 				target: "http://" + config.host + ":" + config.devPort
 			});

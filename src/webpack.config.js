@@ -2,16 +2,18 @@ import webpack from "webpack";
 import path from "path";
 import config from "./config";
 
+var http = "http://"+config.host+":"+config.devPort;
+
 export default {
-	context: __dirname,
-	devtool: "eval-source-map",
+	context: path.join(__dirname, "../src"),
+	devtool: "#eval-source-map",
 	entry: config.env === "dev"
-		? ["webpack/hot/dev-server", "webpack-dev-server/client?http://"+config.host+":"+config.devPort, "./public/index.js"]
+		? ["webpack/hot/dev-server", "webpack-dev-server/client?" + http, "./public/index.js"]
 		: "./public/index.js",
 	output: {
 		path: path.join(__dirname, "bundle"),
 		filename: "index.js",
-		publicPath: "/bundle/"
+		publicPath: http + "/bundle/"
 	},
 	module: {
 		loaders: [
