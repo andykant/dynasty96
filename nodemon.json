@@ -1,0 +1,13 @@
+{
+	"verbose": true,
+	"events": {
+		"restart": "rm -rf lib; ./node_modules/.bin/babel src -d lib"
+	},
+	"watch": [
+		"src"
+	],
+	"ignore": [
+		"src/public/**/*.js",
+		"src/public/**/*.css"
+	]
+}
