@@ -19,15 +19,15 @@ if (config.env === "dev") {
 }
 
 function ready() {
-	// Load the index page
-	var index = fs.readFileSync(path.join(__dirname, "../src/public/index.html"), "utf8");
+	// Load static file
+	var file = (file) => fs.readFileSync(path.join(__dirname, "../src/public/" + file), "utf8");
 
 	// Initialize the app
 	var app = feathers();
 	app.configure(socketio((io) => {
 		// Do stuff
 	}));
-	app.get("/", (req, res) => res.send(index));
+	app.use(feathers.static(path.join(__dirname, "../src/public")));
 
 	// Link webpack bundle
 	if (config.env === "dev") {

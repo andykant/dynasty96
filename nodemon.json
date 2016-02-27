@@ -7,7 +7,7 @@
 		"src"
 	],
 	"ignore": [
-		"src/public/**/*.js",
-		"src/public/**/*.css"
+		"src/client/**",
+		"src/public/**"
 	]
 }

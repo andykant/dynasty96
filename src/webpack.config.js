@@ -8,8 +8,8 @@ export default {
 	context: path.join(__dirname, "../src"),
 	devtool: "#eval-source-map",
 	entry: config.env === "dev"
-		? ["webpack/hot/dev-server", "webpack-dev-server/client?" + http, "./public/index.js"]
-		: "./public/index.js",
+		? ["webpack/hot/dev-server", "webpack-dev-server/client?" + http, "./client/index.js"]
+		: "./client/index.js",
 	output: {
 		path: path.join(__dirname, "bundle"),
 		filename: "index.js",
