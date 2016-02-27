@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Actions from "./actions";
-import Players from "./players";
+import App from "./views/index";
 
 var timestamp = () => Math.floor(Date.now() / 1000);
 var socket = io({ transports: ["websocket", "polling"] });
@@ -12,4 +12,4 @@ socket.on("players", (players) => Actions.players(players));
 socket.on("draftResults", (draftResults) => Actions.draftResults(draftResults));
 socket.on("delta", (deltas) => Actions.deltas(deltas));
 
-ReactDOM.render(<Players />, document.getElementById("app"));
+ReactDOM.render(<App />, document.getElementById("app"));
