@@ -146,3 +146,49 @@ export var Franchise = Reflux.createStore({
 		}
 	}
 });
+
+export var Next = Reflux.createStore({
+	listenables: Actions,
+	
+	init: function() {
+		this.pick = null;
+		this.listenTo(Franchise, this.updateFranchise);
+		this.listenTo(DraftResults, this.updateDraftResults);
+	},
+
+	getInitialState: function() {
+		return this.pick;
+	},
+
+	updateFranchise: function(franchise) {
+		this.franchise = franchise;
+		this.update();
+	},
+
+	updateDraftResults: function(draftResults) {
+		this.draftResults = draftResults;
+		this.update();
+	},
+
+	overall: function(pick) {
+		return (parseInt(pick.round,10) - 1) * 96 + parseInt(pick.pick,10);
+	},
+
+	update: function() {
+		if (this.franchise && this.draftResults) {
+			var franchise = this.franchise;
+			var currentPick = this.draftResults.find((pick) => pick.timestamp === 0);
+			var nextPick = this.draftResults.find((pick) => pick.timestamp === 0 && pick.franchise === franchise.id);
+			var difference = currentPick && nextPick ? (this.overall(nextPick) - this.overall(currentPick)) : null;
+
+			this.pick = {
+				difference: difference,
+				currentPick: currentPick,
+				nextPick: nextPick,
+				currentOverall: this.overall(currentPick),
+				nextOverall: this.overall(nextPick)
+			};
+			this.trigger(this.pick);
+		}
+	}
+});

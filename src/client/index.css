@@ -173,7 +173,8 @@ html, body {
 	text-align: center;
 	margin: 10px 10px 0;
 	padding: 3px 3px 0;
-	font-size: 120%;
+	font-size: 110%;
+	text-transform: uppercase;
 }
 
 .franchise-next-draft,
@@ -183,4 +184,16 @@ html, body {
 
 .franchise-next-draft {
 	color: #fc6162;
+}
+
+.player-my-pick {
+	display: block;
+	font-weight: bold;
+	text-align: center;
+	line-height: 24px;
+	padding: 3px 3px 0;
+	background: #f6f6f6;
+	font-size: 110%;
+	text-transform: uppercase;
+	border-top: 1px solid #eee;
 }
