@@ -157,3 +157,19 @@ html, body {
 	margin: 10px 10px 0;
 	padding: 3px 3px 0;
 }
+
+.franchise-next {
+	text-align: center;
+	margin: 10px 10px 0;
+	padding: 3px 3px 0;
+	font-size: 120%;
+}
+
+.franchise-next-draft,
+.franchise-next-pick {
+	font-weight: bold;
+}
+
+.franchise-next-draft {
+	color: #fc6162;
+}
