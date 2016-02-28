@@ -1,3 +1,50 @@
 body {
+	color: #333;
+	background: #fff;
 	font: 16px/24px "proxima-nova-extra-condensed", sans-serif;
+}
+
+.player {
+	display: block;
+	overflow: hidden;
+}
+
+.player-header {
+	font-weight: bold;
+}
+
+.player-stats { 
+	float: right;
+	width: 300px;
+}
+
+.player-name,
+.player-team,
+.player-position { 
+	margin-right: 5px;
+	display: inline-block;
+}
+
+.player-team {
+	color: #bbb;
+	min-width: 1.5em;
+}
+
+.player-position {
+	font-weight: bold;
+	min-width: 1.5em;
+}
+
+.player-position-QB { color: #67b3dd; }
+.player-position-RB { color: #71bf42; }
+.player-position-WR { color: #fc6162; }
+.player-position-TE { color: #9c49b6; }
+
+.player-age,
+.player-adp,
+.player-dlf-adp,
+.player-dlf-stddev {
+	display: inline-block;
+	width: 25%;
+	text-align: center;
 }

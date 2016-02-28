@@ -3,6 +3,7 @@ import path from "path";
 import feathers from "feathers";
 import socketio from "feathers-socketio";
 import httpProxy from "http-proxy";
+import request from "request";
 import webpack from "webpack";
 import WebpackDevServer from "webpack-dev-server";
 import config from "./config";
@@ -34,16 +35,45 @@ var timestamp = () => Math.floor(Date.now() / 1000);
 var load = (type, json) => {
 	data[type] = json[type];
 
-	// Merge ADPs
+	// Adjust player names
+	if (data.players && type === "players") {
+		data.players.forEach((player) => {
+      var comma = player.name.indexOf(", ");
+      comma = comma > -1 ? comma : player.name.length;
+      player.name = player.name.slice(comma + 2) + " " + player.name.slice(0, comma);
+    });
+	}
+
+	// Merge MFL ADP
 	if (data.adp && data.players && ["adp","players"].indexOf(type) > -1) {
 		data.adp.forEach((player) => {
 			for (var i = 0; i < data.players.length; i++) {
 				if (data.players[i].id === player.id) {
-					data.players[i].adp = Math.round(10*player.averagePick)/10;
+					data.players[i].adp = Math.round(player.averagePick);
 				}
 			}
 		});
-		data.players.sort((a,b) => b.averagePick || 0 - a.averagePick || 0);
+	}
+
+	// Merge DLF ADP
+	if (data.dlf && data.players && ["dlf","players"].indexOf(type) > -1) {
+		var adp = [],
+			selector = /\<td.*?style="font-size:10px;".*?\>[\n\r\s]*(.+?)[\n\r\s]*\<\/td\>[\n\r]+\<td .+?\>(.*?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>/gm;
+		data.dlf.replace(selector, (whole, name, age, rank, stddev) => {
+			name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,"");
+			for (var i = 0; i < data.players.length; i++) {
+				if (name.replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
+					data.players[i].dlf_adp = Math.round(6*parseFloat(rank));
+					data.players[i].dlf_stddev = Math.round(6*parseFloat(stddev));
+					data.players[i].age = parseInt(age,10);
+				}
+			}
+		});
+	}
+
+	// Sort players
+	if (data.dlf && data.adp && data.players && ["adp","dlf","players"].indexOf(type) > -1) {
+		data.players = data.players.sort((a,b) => (a.dlf_adp || a.adp || Infinity) - (b.dlf_adp || b.adp || Infinity));
 	}
 
 	update();
@@ -58,6 +88,7 @@ mfl("players", (body) => body.players.player.filter(
 mfl("draftResults", (body) => body.draftResults.draftUnit.draftPick.map(
 	(pick) => { pick.timestamp = parseInt(pick.timestamp,10) || 0; return pick; }
 ), load, 10*60*1000);
+load("dlf", { dlf: fs.readFileSync(path.join(__dirname, "../data/dlf_adp.html"), "utf8") });
 
 function ready() {
 	// Load static file
@@ -88,7 +119,7 @@ function ready() {
 		});
 
 		// Push deltas on update
-		update = function() {
+		update = () => {
 			var ts = timestamp();
 			var d = deltas(ts);
 			sockets.forEach((socket) => {
