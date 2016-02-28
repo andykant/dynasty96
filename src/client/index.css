@@ -34,6 +34,15 @@ html, body {
 	right: 0;
 }
 
+.player-header * {
+	color: #000 !important;
+}
+
+.player-header *:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 .player-stats { 
 	float: right;
 	width: 350px;

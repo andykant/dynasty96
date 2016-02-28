@@ -35,7 +35,14 @@ export var DraftResults = Reflux.createStore({
 	},
 
 	onDeltas: function(deltas) {
-		// TODO
+		deltas.forEach((delta) => {
+			for (var i = 0, pick; pick = this.draftResults[i]; i++) {
+				if (pick.pick === delta.pick && pick.round === delta.round) {
+					this.draftResults[i] = delta;
+					break;
+				}
+			}
+		});
 	}
 });
 
@@ -49,6 +56,27 @@ export var Players = Reflux.createStore({
 
 	getInitialState: function() {
 		return this.players;
+	},
+
+	onPlayers: function(players) {
+		this.players = players;
+		this.update();
+	},
+
+	onSort: function(column) {	
+		var example = this.players[0][column];	
+		column = example !== undefined ? column : "dlf_adp";
+		if (typeof example === "string") {
+			this.players = this.players.sort((a,b) => {
+				if ((a[column] || "") > (b[column] || "")) return 1;
+				else if ((a[column] || "") < (b[column] || "")) return -1;
+				return 0;
+			});
+		}
+		else {
+			this.players = this.players.sort((a,b) => (a[column] || a.dlf_adp || a.adp || Infinity) - (b[column] || b.dlf_adp || b.adp || Infinity));
+		}
+		this.trigger(this.players);
 	},
 
 	update: function(draftResults) {
@@ -68,11 +96,6 @@ export var Players = Reflux.createStore({
 		});
 
 		this.trigger(this.players);
-	},
-
-	onPlayers: function(players) {
-		this.players = players;
-		this.update();
 	}
 });
 
