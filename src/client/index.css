@@ -121,7 +121,7 @@ html, body {
 	top: 0;
 	bottom: 0;
 	left: 0;
-	right: 240px;
+	width: 240px;
 	overflow: hidden;
 	overflow-y: auto;
 }
@@ -148,4 +148,12 @@ html, body {
 
 .franchise-main:hover {
 	cursor: pointer;
+}
+
+.player-compact { 
+	border-radius: 3px;
+	text-align: center;
+	background: #fff;
+	margin: 10px 10px 0;
+	padding: 3px 3px 0;
 }

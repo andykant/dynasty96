@@ -1,27 +1,15 @@
 import React from "react";
 import Reflux from "reflux";
 import Actions from "../actions";
-import { Franchise, League } from "../stores";
-
-class Team extends React.Component {
-	handleClick(ev) {
-	}
-
-  render() {
-  	var franchise = this.props;
-    return <div className="franchise-main" data-franchise-id={franchise.id} onClick={this.props.onClick}>
-    	{franchise.icon
-				? <img title={franchise.name} className="franchise-icon" src={franchise.icon} />
-				: <span className="franchise-name">{franchise.name}</span>
-			}
-		</div>
-  }
-}
+import { Franchise, League, DraftResults, Players } from "../stores";
+import Team from "./team";
+import Player from "./player";
 
 export default React.createClass({
 	mixins: [
 		Reflux.connect(Franchise, "franchise"),
-		Reflux.connect(League, "league")
+		Reflux.connect(League, "league"),
+		Reflux.connect(DraftResults, "draftResults")
 	],
 
 	selectFranchise: function(ev) {
@@ -32,8 +20,16 @@ export default React.createClass({
 	},
 
 	renderFranchise: function() {
-		return <div className="franchise-header">
-			<Team {...this.state.franchise} onClick={Actions.clearFranchise} />
+		var franchise = this.state.franchise;
+		return <div className="franchise-roster">
+			<Team {...franchise} onClick={Actions.clearFranchise} />
+			{this.state.draftResults && this.state.draftResults
+				.filter((pick) => franchise && pick.player && pick.franchise === franchise.id)
+				.map((pick, i) => {
+					var player = Players.byId(pick.player);
+					return <Player key={player ? player.id : i} {...player} compact={true} />;
+				})
+			}
 		</div>
 	},
 

@@ -80,6 +80,14 @@ export var Players = Reflux.createStore({
 		this.trigger(this.players);
 	},
 
+	byId: function(id) {
+		for (var i = 0; i < this.players.length; i++) {
+			if (this.players[i].id === id) {
+				return this.players[i];
+			}
+		}
+	},
+
 	update: function(draftResults) {
 		var players = this.players;
 		this.draftResults = draftResults || this.draftResults || [];
