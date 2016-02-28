@@ -43,6 +43,7 @@ export var DraftResults = Reflux.createStore({
 				}
 			}
 		});
+		this.trigger(this.draftResults);
 	}
 });
 

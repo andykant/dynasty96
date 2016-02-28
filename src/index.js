@@ -98,41 +98,50 @@ function ready() {
 	var app = feathers();
 	app.configure(socketio((io) => {
 		var sockets = [];
+		var id = 0;
 
 		// Manage connections
 		io.on("connection", (socket) => {
 			// Set initial data
-			socket.delta = 0;
+			sockets.push(socket);
+			socket.id = ++id;
+			var picks = deltas(0);
+			socket.delta = picks.length > 0 ? picks[picks.length - 1].timestamp : 0;
+			console.log("#" + socket.id + " connected");
 			socket.emit("league", data.league);
 			socket.emit("players", data.players);
 			socket.emit("draftResults", data.draftResults);
 
 			// Handle reconnections
 			socket.on("reconnect", () => {
+				console.log("#" + socket.id + " reconnected");
 				sockets.push(socket);
-				socket.emit("delta", deltas(socket.delta));
-				socket.delta = timestamp();
+				send_deltas(socket);
 			});
 			socket.on("disconnect", () => {
+				console.log("#" + socket.id + " disconnected");
 				sockets.splice(sockets.indexOf(socket), 1);
 			});
 		});
 
 		// Push deltas on update
-		update = () => {
-			var ts = timestamp();
-			var d = deltas(ts);
-			sockets.forEach((socket) => {
-				socket.delta = ts;
-				socket.emit("delta", ts, d);
-			});
+		update = () => sockets.forEach((socket) => send_deltas(socket));
+
+		// Send delta picks
+		function send_deltas(socket) {
+			var picks = deltas(socket.delta);
+			socket.emit("delta", picks);
+			socket.delta = picks[picks.length - 1].timestamp || socket.delta;
 		};
 
 		// Retrieve deltas
 		function deltas(timestamp) {
 			var picks = data.draftResults.filter((pick) => !!pick.timestamp);
-			for (var i = picks.length - 1; i >= 0; i--) {
-				if (timestamp < picks[i].timestamp) {
+			for (var i = 0; i < picks.length; i++) {
+				if (picks[i].timestamp < timestamp) {
+					continue;
+				}
+				else {
 					return picks.slice(i);
 				}
 			}
