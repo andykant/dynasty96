@@ -58,11 +58,11 @@ var load = (type, json) => {
 	// Merge DLF ADP
 	if (data.dlf && data.players && ["dlf","players"].indexOf(type) > -1) {
 		var adp = [],
-			selector = /\<td.*?style="font-size:10px;".*?\>[\n\r\s]*(.+?)[\n\r\s]*\<\/td\>[\n\r]+\<td .+?\>(.*?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>/gm;
-		data.dlf.replace(selector, (whole, name, age, rank, stddev) => {
+			selector = /\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td.*?style="font-size:10px;".*?\>[\n\r\s]*(.+?)[\n\r\s]*\<\/td\>[\n\r]+\<td .+?\>(.*?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>/gm;
+		data.dlf.replace(selector, (whole, position, name, age, rank, stddev) => {
 			name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,"");
 			for (var i = 0; i < data.players.length; i++) {
-				if (name.replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
+				if (position === data.players[i].position && name.replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
 					data.players[i].dlf_adp = Math.round(6*parseFloat(rank));
 					data.players[i].dlf_stddev = Math.round(6*parseFloat(stddev));
 					data.players[i].age = parseInt(age,10);

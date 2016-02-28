@@ -5,10 +5,12 @@ import { Players } from "../stores";
 class Player extends React.Component {  
   render() {
   	var player = this.props;
-    return <div className={"player " + (player.className || "")}>
+  	var left = typeof player.left !== "undefined" ? player.left : 6;
+    return <div className={"player " + (player.className || "") + (player.left === 0 ? " player-gone" : "")}>
 			<span className="player-main">
 				<span className={"player-position player-position-" + player.position}>{player.position}</span>
 				<span className="player-team">{player.team}</span>
+				<span className={"player-left player-left-" + left}>{left}</span>
 				<span className="player-name">{player.name}</span>
 			</span>
 			<span className="player-stats">
@@ -29,6 +31,7 @@ export default React.createClass({
 			<Player
 				className="player-header"
 				name="Player"
+				left=""
 				age="Age"
 				adp="MFL ADP"
 				dlf_adp="DLF ADP"

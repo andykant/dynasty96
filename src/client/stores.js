@@ -18,23 +18,6 @@ export var League = Reflux.createStore({
 	}
 });
 
-export var Players = Reflux.createStore({
-	listenables: Actions,
-	
-	init: function() {
-		this.players = [];
-	},
-
-	getInitialState: function() {
-		return this.players;
-	},
-
-	onPlayers: function(players) {
-		this.players = players;
-		this.trigger(this.players);
-	}
-});
-
 export var DraftResults = Reflux.createStore({
 	listenables: Actions,
 
@@ -55,3 +38,41 @@ export var DraftResults = Reflux.createStore({
 		// TODO
 	}
 });
+
+export var Players = Reflux.createStore({
+	listenables: Actions,
+	
+	init: function() {
+		this.players = [];
+		this.listenTo(DraftResults, this.update);
+	},
+
+	getInitialState: function() {
+		return this.players;
+	},
+
+	update: function(draftResults) {
+		var players = this.players;
+		this.draftResults = draftResults || this.draftResults || [];
+
+		players.forEach((player) => player.left = 6);
+		this.draftResults.forEach((pick) => {
+			if (pick.player) {
+				for (var i = 0; i < players.length; i++) {
+					if (players[i].id === pick.player) {
+						players[i].left--;
+						break;
+					}
+				}
+			}
+		});
+
+		this.trigger(this.players);
+	},
+
+	onPlayers: function(players) {
+		this.players = players;
+		this.update();
+	}
+});
+
