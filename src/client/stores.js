@@ -100,3 +100,41 @@ export var Players = Reflux.createStore({
 	}
 });
 
+export var Franchise = Reflux.createStore({
+	listenables: Actions,
+	
+	init: function() {
+		this.franchise = null;
+		this.listenTo(League, this.update);
+	},
+
+	getInitialState: function() {
+		return this.franchise;
+	},
+
+	onFranchise: function(id) {
+		this.update(null, id);
+	},
+
+	onClearFranchise: function() {
+		this.franchise = null;
+		localStorage.removeItem("franchise");
+		this.trigger(this.franchise);
+	},
+
+	update: function(league, id) {
+		this.league = league || this.league || [];
+		id = id || localStorage.getItem("franchise");
+
+		if (id) {
+			for (var i = 0; i < this.league.length; i++) {
+				if (this.league[i].id === id) {
+					this.franchise = this.league[i];
+					localStorage.setItem("franchise", id);
+					this.trigger(this.franchise);
+					break;
+				}
+			}
+		}
+	}
+});

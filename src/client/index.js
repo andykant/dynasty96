@@ -13,4 +13,6 @@ socket.on("players", (players) => Actions.players(players));
 socket.on("draftResults", (draftResults) => Actions.draftResults(draftResults));
 socket.on("delta", (deltas) => Actions.deltas(deltas));
 
-ReactDOM.render(<App />, document.getElementById("app"));
+document.addEventListener("DOMContentLoaded", () => {
+	ReactDOM.render(<App />, document.getElementById("app"));
+}, false);

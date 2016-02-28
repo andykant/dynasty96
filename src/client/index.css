@@ -1,4 +1,4 @@
-* { box-sizing: border-box }
+*, *:before, *:after { box-sizing: border-box }
 
 html, body {
 	color: #333;
@@ -8,15 +8,30 @@ html, body {
 	padding: 0;
 }
 
-.players {
-	padding-top: 30px;
+#app, .app {
+	overflow: hidden;
+	height: 100vh;
 	width: 100%;
+	position: relative;
+}
+
+.players {
+	background: #fff;
+	margin-left: 240px;
+	position: relative;
+	height: 100%;
+	padding-top: 43px;
+	padding-bottom: 3px;
+	overflow: hidden;
+	overflow-y: auto;
+	will-change: opacity;
 }
 
 .player {
 	padding: 3px 3px 0;
 	display: block;
 	overflow: hidden;
+	z-index: 1;
 }
 
 .player-gone {
@@ -26,12 +41,14 @@ html, body {
 .player-header {
 	font-weight: bold;
 	position: fixed;
-	width: 100%;
 	background: #fff;
 	border-bottom: 1px solid #eee;
 	padding: 3px 3px 0;
 	top: 0;
 	right: 0;
+	left: 240px;
+	line-height: 36px;
+	z-index: 2;
 }
 
 .player-header * {
@@ -45,7 +62,7 @@ html, body {
 
 .player-stats { 
 	float: right;
-	width: 350px;
+	width: 320px;
 }
 
 .player-name,
@@ -96,4 +113,39 @@ html, body {
 	display: inline-block;
 	width: 25%;
 	text-align: center;
+}
+
+.franchise {
+	background: #eee;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 240px;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+.franchise-main,
+.franchise-icon,
+.franchise-name {
+	width: 240px;
+	height: 40px;
+}
+
+.franchise-name {
+	display: block;
+	font-weight: bold;
+	text-align: center;
+	line-height: 40px;
+	background: #67b3dd;
+	color: #fff;
+}
+
+.franchise-name:hover {
+	text-decoration: underline;
+}
+
+.franchise-main:hover {
+	cursor: pointer;
 }
