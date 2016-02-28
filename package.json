@@ -12,6 +12,7 @@
     "babel-plugin-react-transform": "^2.0.0",
     "babel-preset-es2015": "^6.5.0",
     "babel-preset-react": "^6.5.0",
+    "css-loader": "^0.23.1",
     "feathers": "^2.0.0",
     "feathers-socketio": "^1.3.3",
     "http-proxy": "^1.13.2",
@@ -23,6 +24,7 @@
     "redbox-react": "^1.2.2",
     "reflux": "^0.3.0",
     "request": "^2.69.0",
+    "style-loader": "^0.13.0",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1"
   },

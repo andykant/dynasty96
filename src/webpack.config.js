@@ -7,7 +7,7 @@ var http = "http://"+config.host+":"+config.devPort;
 export default {
 	context: path.join(__dirname, "../src"),
 	devtool: "#eval-source-map",
-	entry: config.env === "dev"
+	entry: config.env === "development"
 		? ["webpack/hot/dev-server", "webpack-dev-server/client?" + http, "./client/index.js"]
 		: "./client/index.js",
 	output: {
@@ -17,8 +17,9 @@ export default {
 	},
 	module: {
 		loaders: [
-			{ test: /\.js$/, exclude: /node_modules/, loader: "babel" }
+			{ test: /\.js$/, exclude: /node_modules/, loader: "babel" },
+			{ test: /\.css$/, exclude: /node_modules/, loader: "style!css" }
 		]
 	},
-	plugins: config.env === "dev" ? [new webpack.HotModuleReplacementPlugin()] : []
+	plugins: config.env === "development" ? [new webpack.HotModuleReplacementPlugin()] : []
 };

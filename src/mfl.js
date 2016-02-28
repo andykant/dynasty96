@@ -13,7 +13,7 @@ export default function get(type, parse, callback, refreshRate) {
 	else {
 		console.log("Loading MFL API: " + type + " (" + Date.now() + ")");
 		request.get({
-			url: "http://football.myfantasyleague.com/" + config.year + "/export?TYPE=" + type + "&JSON=1&L=" + config.league, 
+			url: "http://football.myfantasyleague.com/" + config.year + "/export?TYPE=" + type + "&JSON=1&FRANCHISES=16&L=" + config.league, 
 			json: true
 		}, (e, r, body) => {
 			var data = { [type]: parse(body) };

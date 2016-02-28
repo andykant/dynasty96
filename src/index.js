@@ -9,9 +9,11 @@ import config from "./config";
 import webpackConfig from "./webpack.config";
 import mfl from "./mfl";
 
+process.env.NODE_ENV = config.env;
+
 // Initialize webpack bundle
 var compiler = webpack(webpackConfig, ready);
-if (config.env === "dev") {
+if (config.env === "development") {
 	var bundler = new WebpackDevServer(compiler, {
 		publicPath: "/bundle/",
 		hot: true
@@ -29,8 +31,27 @@ if (!fs.existsSync(data)) {
 var data = {};
 var update = function() {};
 var timestamp = () => Math.floor(Date.now() / 1000);
-var load = (type, json) => { data[type] = json[type]; update(); };
+var load = (type, json) => {
+	data[type] = json[type];
+
+	// Merge ADPs
+	if (data.adp && data.players && ["adp","players"].indexOf(type) > -1) {
+		data.adp.forEach((player) => {
+			for (var i = 0; i < data.players.length; i++) {
+				if (data.players[i].id === player.id) {
+					data.players[i].adp = Math.round(10*player.averagePick)/10;
+				}
+			}
+		});
+		data.players.sort((a,b) => b.averagePick || 0 - a.averagePick || 0);
+	}
+
+	update();
+};
 mfl("league", (body) => body.league.franchises.franchise, load);
+mfl("adp", (body) => body.adp.player.map(
+	(player) => (player.averagePick = parseFloat(player.averagePick)*6) && player
+), load);
 mfl("players", (body) => body.players.player.filter(
 	(player) => config.positions.indexOf(player.position) > -1
 ), load);
@@ -40,7 +61,7 @@ mfl("draftResults", (body) => body.draftResults.draftUnit.draftPick.map(
 
 function ready() {
 	// Load static file
-	var file = (file) => fs.readFileSync(path.join(__dirname, "../src/public/" + file), "utf8");
+	var file = (file) => fs.readFileSync(path.join(__dirname, "../src/client/" + file), "utf8");
 
 	// Initialize the app
 	var app = feathers();
@@ -87,10 +108,10 @@ function ready() {
 			return picks;
 		};
 	}));
-	app.use(feathers.static(path.join(__dirname, "../src/public")));
+	app.get("/", (req, res) => res.send(file("index.html")));
 
 	// Link webpack bundle
-	if (config.env === "dev") {
+	if (config.env === "development") {
 		var proxy = httpProxy.createProxyServer();
 		app.all("/bundle/*", (req, res) => {
 			proxy.web(req, res, {
@@ -99,7 +120,7 @@ function ready() {
 		});
 	}
 	else {
-		app.use("/bundle/*", feathers.static(path.join(__dirname, "bundle")));
+		app.use("/bundle", feathers.static(path.join(__dirname, "bundle")));
 	}
 
 	// Listen

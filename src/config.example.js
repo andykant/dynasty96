@@ -1,6 +1,6 @@
 export default {
-	// Environment: dev | prod
-	env: "dev",
+	// Environment: development | production
+	env: "production",
 	// Host
 	host: "localhost",
 	// Port
@@ -11,6 +11,8 @@ export default {
 	league: 0,
 	// MFL year
 	year: 2016,
-	// Positions
-	positions: ["QB","RB","WR","TE"]
+	// MFL Positions
+	positions: ["QB","RB","WR","TE"],
+	// MFL refresh rate
+	refreshRate: 10 * 60 * 1000
 };

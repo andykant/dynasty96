@@ -7,7 +7,6 @@
 		"src"
 	],
 	"ignore": [
-		"src/client/**",
-		"src/public/**"
+		"src/client/**"
 	]
 }
