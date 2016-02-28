@@ -41,7 +41,7 @@ export default React.createClass({
 				.filter((pick) => pick.player)
 				.map((pick, i) => {
 					var player = Players.byId(pick.player);
-					return <Player key={player ? player.id : i} {...player} compact={true} />;
+					return <Player key={player ? player.id : i} {...player} pick={pick} compact={true} />;
 				})
 			}
 		</div>

@@ -13,6 +13,7 @@ export default class Player extends React.Component {
   	var left = typeof player.left !== "undefined" ? player.left : 6;
     return <div className={"player " + (player.className || "") + (!compact && player.left === 0 ? " player-gone" : "") + (compact ? " player-compact" : "")} onClick={player.header === true && this.handleClick}>
 			<span className="player-main">
+				{compact && player.pick && <span className="player-pick">{parseInt(player.pick.round,10) + "." + player.pick.pick}</span>}
 				<span className={"player-position player-position-" + player.position}>{player.position}</span>
 				<span className="player-team">{player.team}</span>
 				{!compact && <span className={"player-left player-left-" + left}>{left}</span>}
