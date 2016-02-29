@@ -231,3 +231,7 @@ html, body {
 	text-transform: uppercase;
 	border-top: 1px solid #eee;
 }
+
+.player-my-pick-up {
+	background: #fc6162;
+}

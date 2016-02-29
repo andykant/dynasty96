@@ -2,10 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Actions from "./actions";
 import App from "./views/index";
+import config from "../config";
 import "./index.css";
 
 var timestamp = () => Math.floor(Date.now() / 1000);
-var socket = io({ transports: ["websocket", "polling"] });
+var socket = io({ transports: config.transports });
 
 console.log("Dynasty96", timestamp());
 socket.on("league", (league) => Actions.league(league));

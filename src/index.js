@@ -87,7 +87,7 @@ mfl("players", (body) => body.players.player.filter(
 ), load);
 mfl("draftResults", (body) => body.draftResults.draftUnit.draftPick.map(
 	(pick) => { pick.timestamp = parseInt(pick.timestamp,10) || 0; return pick; }
-), load, 10*60*1000);
+), load, config.refreshRate);
 load("dlf", { dlf: fs.readFileSync(path.join(__dirname, "../data/dlf_adp.html"), "utf8") });
 var franchisejson = path.join(__dirname, "../data/franchise.json");
 load("franchise", fs.existsSync(franchisejson) ? JSON.parse(fs.readFileSync(franchisejson)) : { franchise: {} });

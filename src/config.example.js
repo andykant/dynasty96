@@ -14,5 +14,7 @@ export default {
 	// MFL Positions
 	positions: ["QB","RB","WR","TE"],
 	// MFL refresh rate
-	refreshRate: 10 * 60 * 1000
+	refreshRate: 10 * 60 * 1000,
+	// Socket.IO transports
+	transports: ["websocket", "polling"]
 };
