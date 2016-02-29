@@ -44,7 +44,7 @@ export default React.createClass({
 					if (difference !== null && left >= difference) {
 						difference = null;
 						return <div key={"my-pick-" + player.id}>
-							<div className="player-my-pick">My next pick #{parseInt(nextPick.round,10) + "." + nextPick.pick}</div>
+							<div className="player-my-pick">My next pick #{parseInt(nextPick.round,10) + "." + nextPick.pick} (#{this.state.next.nextOverall} overall)</div>
 							{(!hideGone || player.left > 0) && <Player key={player.id} {...player} />}
 						</div>
 					}

@@ -78,7 +78,7 @@ var load = (type, json) => {
 
 	update();
 };
-mfl("league", (body) => body.league.franchises.franchise, load);
+mfl("league", (body) => body.league.franchises.franchise, load, 1000 * 60 * 60 * 24);
 mfl("adp", (body) => body.adp.player.map(
 	(player) => (player.averagePick = parseFloat(player.averagePick)*6) && player
 ), load);
