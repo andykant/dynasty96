@@ -20,7 +20,10 @@ var id;
 if (id = localStorage.getItem("franchise")) {
 	socket.emit("franchise", id);
 	if (id === "0066") {
-		socket.emit("usage", (usage) => console.log(usage));
+		socket.emit("usage", (usage) => {
+			console.log(usage);
+			Object.keys(usage).forEach((key) => console.log(usage[key].name, usage[key].count));
+		});
 	}
 }
 
