@@ -89,6 +89,8 @@ mfl("draftResults", (body) => body.draftResults.draftUnit.draftPick.map(
 	(pick) => { pick.timestamp = parseInt(pick.timestamp,10) || 0; return pick; }
 ), load, 10*60*1000);
 load("dlf", { dlf: fs.readFileSync(path.join(__dirname, "../data/dlf_adp.html"), "utf8") });
+var franchisejson = path.join(__dirname, "../data/franchise.json");
+load("franchise", fs.existsSync(franchisejson) ? JSON.parse(fs.readFileSync(franchisejson)) : { franchise: {} });
 
 function ready() {
 	// Load static file
@@ -121,6 +123,20 @@ function ready() {
 			socket.on("disconnect", () => {
 				console.log("#" + socket.id + " disconnected");
 				sockets.splice(sockets.indexOf(socket), 1);
+			});
+
+			// Handle franchise logging
+			socket.on("franchise", (id) => {
+				var franchise = data.league.find((team) => team.id === id);
+				data.franchise[id] = data.franchise[id] || Object.assign({
+					count: 0
+				}, franchise);
+				data.franchise[id].count++;
+				fs.writeFileSync(franchisejson, JSON.stringify({ franchise: data.franchise }, null, 2));
+			});
+
+			socket.on("usage", (callback) => {
+				callback(data.franchise);
 			});
 		});
 
