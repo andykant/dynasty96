@@ -9,9 +9,21 @@ export default React.createClass({
 		Reflux.connect(Next, "next")
 	],
 
+	getInitialState: function() {
+		return {
+			hideGone: JSON.parse(localStorage.getItem("hideGone") || "false")
+		};
+	},
+
+	handleHide: function(ev) {
+		this.setState({ hideGone: !this.state.hideGone });
+		localStorage.setItem("hideGone", JSON.stringify(!this.state.hideGone));
+	},
+
 	render: function() {
 		var difference = this.state.next && this.state.next.difference;
 		var nextPick = this.state.next && this.state.next.nextPick;
+		var hideGone = !!this.state.hideGone;
 		var left = 0;
 		return <section className="players">
 			<Player
@@ -33,14 +45,17 @@ export default React.createClass({
 						difference = null;
 						return <div key={"my-pick-" + player.id}>
 							<div className="player-my-pick">My next pick #{parseInt(nextPick.round,10) + "." + nextPick.pick}</div>
-							<Player key={player.id} {...player} />
+							{(!hideGone || player.left > 0) && <Player key={player.id} {...player} />}
 						</div>
 					}
-					else {
+					else if (!hideGone || player.left > 0) {
 						return <Player key={player.id} {...player} />
 					}
 				}
 			)}
+			<div className="players-options">
+				<label><input type="checkbox" checked={this.state.hideGone} onChange={this.handleHide} />hide taken players</label>
+			</div>
 		</section>
 	}
 });

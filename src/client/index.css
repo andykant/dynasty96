@@ -21,7 +21,7 @@ html, body {
 	position: relative;
 	height: 100%;
 	padding-top: 43px;
-	padding-bottom: 3px;
+	padding-bottom: 43px;
 	overflow: hidden;
 	overflow-y: auto;
 	will-change: opacity;
@@ -53,6 +53,29 @@ html, body {
 
 .player-header * {
 	color: #000 !important;
+}
+
+.players-options {
+	font-weight: bold;
+	position: fixed;
+	background: #fff;
+	border-top: 1px solid #eee;
+	padding: 3px 3px 0;
+	bottom: 0;
+	right: 0;
+	left: 240px;
+	line-height: 36px;
+	z-index: 2;
+	text-align: center;
+}
+
+.players-options input {
+	margin-right: 5px;
+}
+
+.players-options label:hover {
+	text-decoration: underline;
+	cursor: pointer;
 }
 
 .player-header *:hover {
