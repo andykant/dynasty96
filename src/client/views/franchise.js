@@ -27,6 +27,9 @@ export default React.createClass({
 		var draftResults = this.state.draftResults.filter((pick) => pick.franchise === franchise.id);
 		return <div className="franchise-roster">
 			<Team {...franchise} onClick={Actions.clearFranchise} />
+			{franchise.id !== "0066" && <div className="franchise-donate">
+				Was this app helpful? <a href="https://www.paypal.me/andykant/5" target="_blank">Donate!</a>
+			</div>}
 			{next && next.difference !== null && <div className="franchise-next">
 				{next.difference === 0
 					? <span className="franchise-next-draft">It's my turn to pick #{parseInt(next.nextPick.round,10) + "." + next.nextPick.pick}!</span>

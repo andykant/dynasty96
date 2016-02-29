@@ -4,6 +4,7 @@ import Actions from "../actions";
 export default class Player extends React.Component {
 	handleClick(ev) {
 		var column = ev.target.className.split(" ")[0].split("-").slice(1).join("_");
+		localStorage.setItem("sort", column);
 		Actions.sort(column);
 	}
 

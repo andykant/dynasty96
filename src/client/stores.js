@@ -61,10 +61,11 @@ export var Players = Reflux.createStore({
 
 	onPlayers: function(players) {
 		this.players = players;
+		this.onSort(localStorage.getItem("sort") || "adp", true);
 		this.update();
 	},
 
-	onSort: function(column) {	
+	onSort: function(column, skipTrigger) {	
 		var example = this.players[0][column];	
 		column = example !== undefined ? column : "dlf_adp";
 		if (typeof example === "string") {
@@ -77,7 +78,7 @@ export var Players = Reflux.createStore({
 		else {
 			this.players = this.players.sort((a,b) => (a[column] || a.dlf_adp || a.adp || Infinity) - (b[column] || b.dlf_adp || b.adp || Infinity));
 		}
-		this.trigger(this.players);
+		!skipTrigger && this.trigger(this.players);
 	},
 
 	byId: function(id) {

@@ -192,6 +192,7 @@ html, body {
 	padding: 3px 3px 0;
 }
 
+.franchise-donate,
 .franchise-next {
 	text-align: center;
 	margin: 10px 10px 0;
@@ -200,9 +201,19 @@ html, body {
 	text-transform: uppercase;
 }
 
+.franchise-donate a,
 .franchise-next-draft,
 .franchise-next-pick {
 	font-weight: bold;
+}
+
+.franchise-donate a {
+	text-decoration: none;
+	color: #67b3dd;
+}
+
+.franchise-donate a:hover {
+	text-decoration: underline;
 }
 
 .franchise-next-draft {

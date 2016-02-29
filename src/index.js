@@ -73,7 +73,7 @@ var load = (type, json) => {
 
 	// Sort players
 	if (data.dlf && data.adp && data.players && ["adp","dlf","players"].indexOf(type) > -1) {
-		data.players = data.players.sort((a,b) => (a.dlf_adp || a.adp || Infinity) - (b.dlf_adp || b.adp || Infinity));
+		data.players = data.players.sort((a,b) => (a.adp || Infinity) - (b.adp || Infinity));
 	}
 
 	update();
