@@ -82,10 +82,12 @@ export default React.createClass({
 					left += player.left;
 					if (nextFuturePick && left >= futureDifference) {
 						var nextPick = nextFuturePick;
+						var isMyPick = myPick;
+						myPick = false;
 						nextFuturePick = futurePicks.shift() || null;
 						futureDifference = nextFuturePick && (nextFuturePick.overall - currentOverall);
 						return <div key={"my-pick-" + player.id}>
-							<div className={"player-my-pick" + (myPick ? " player-my-pick-up" : "")}>{myPick && "It's"} My next pick #{parseInt(nextPick.round,10) + "." + nextPick.pick}{myPick && "!"} (#{nextPick.overall} overall)</div>
+							<div className={"player-my-pick" + (isMyPick ? " player-my-pick-up" : "")}>{isMyPick && "It's"} My next pick #{parseInt(nextPick.round,10) + "." + nextPick.pick}{isMyPick && "!"} (#{nextPick.overall} overall)</div>
 							{(!hideGone || player.left > 0) && this.state["show" + player.position] && 
 								<Player key={player.id} {...player} />
 							}
@@ -99,7 +101,7 @@ export default React.createClass({
 			)}
 			<div className="players-options" ref="footer">
 				<span className="players-options-modes">
-					<label><input type="checkbox" checked={this.state.hideGone} onChange={this.handleHide} />hide taken players</label>
+					<label><input type="checkbox" checked={this.state.hideGone} onChange={this.handleHide} />Hide taken players</label>
 				</span>
 				<span className="players-options-positions">
 					<label><input type="checkbox" checked={showAll} onChange={this.togglePosition} data-position="All" />All</label>
