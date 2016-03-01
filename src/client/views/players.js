@@ -1,4 +1,5 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import Reflux from "reflux";
 import { Players, Next } from "../stores";
 import Player from "./player";
@@ -20,6 +21,18 @@ export default React.createClass({
 		localStorage.setItem("hideGone", JSON.stringify(!this.state.hideGone));
 	},
 
+	// componentDidMount: function() {
+	// 	this.componentDidUpdate();
+	// },
+
+	componentDidMount: function() {
+		// Tweak width of header/footer based on size of scrollbar
+		var el = ReactDOM.findDOMNode(this);
+		var scrollbarWidth = el.offsetWidth - el.clientWidth;
+		ReactDOM.findDOMNode(this.refs.header).style.right = scrollbarWidth + "px";
+		ReactDOM.findDOMNode(this.refs.footer).style.right = scrollbarWidth + "px";
+	},
+
 	render: function() {
 		var difference = this.state.next && this.state.next.difference;
 		var myPick = difference === 0;
@@ -28,6 +41,7 @@ export default React.createClass({
 		var left = 0;
 		return <section className="players">
 			<Player
+				ref="header"
 				header={true}
 				className="player-header"
 				position="P"
@@ -54,7 +68,7 @@ export default React.createClass({
 					}
 				}
 			)}
-			<div className="players-options">
+			<div className="players-options" ref="footer">
 				<label><input type="checkbox" checked={this.state.hideGone} onChange={this.handleHide} />hide taken players</label>
 			</div>
 		</section>
