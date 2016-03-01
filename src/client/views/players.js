@@ -62,6 +62,7 @@ export default React.createClass({
 		var futurePicks = next && next.futurePicks.slice(0);
 		var nextFuturePick = futurePicks && futurePicks.shift();
 		var futureDifference = nextFuturePick && currentOverall && (nextFuturePick.overall - currentOverall);
+		var nextOverall = next && next.nextOverall;
 		var showAll = this.state.showQB && this.state.showRB && this.state.showWR && this.state.showTE;
 		return <section className="players">
 			<Player
@@ -87,7 +88,7 @@ export default React.createClass({
 						nextFuturePick = futurePicks.shift() || null;
 						futureDifference = nextFuturePick && (nextFuturePick.overall - currentOverall);
 						return <div key={"my-pick-" + player.id}>
-							<div className={"player-my-pick" + (isMyPick ? " player-my-pick-up" : "")}>{isMyPick && "It's"} My next pick #{parseInt(nextPick.round,10) + "." + nextPick.pick}{isMyPick && "!"} (#{nextPick.overall} overall)</div>
+							<div className={"player-my-pick" + (isMyPick ? " player-my-pick-up" : "")}>{isMyPick && "It's"} My {nextOverall === nextPick.overall ? "next" : "future"} pick #{parseInt(nextPick.round,10) + "." + nextPick.pick}{isMyPick && "!"} (#{nextPick.overall} overall)</div>
 							{(!hideGone || player.left > 0) && this.state["show" + player.position] && 
 								<Player key={player.id} {...player} />
 							}
