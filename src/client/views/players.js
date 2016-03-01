@@ -12,13 +12,37 @@ export default React.createClass({
 
 	getInitialState: function() {
 		return {
-			hideGone: JSON.parse(localStorage.getItem("hideGone") || "false")
+			hideGone: JSON.parse(localStorage.getItem("hideGone") || "false"),
+			showQB: JSON.parse(localStorage.getItem("showQB") || "true"),
+			showRB: JSON.parse(localStorage.getItem("showRB") || "true"),
+			showWR: JSON.parse(localStorage.getItem("showWR") || "true"),
+			showTE: JSON.parse(localStorage.getItem("showTE") || "true")
 		};
 	},
 
 	handleHide: function(ev) {
 		this.setState({ hideGone: !this.state.hideGone });
 		localStorage.setItem("hideGone", JSON.stringify(!this.state.hideGone));
+	},
+
+	togglePosition: function(ev) {
+		var position = ev.currentTarget.getAttribute("data-position");
+		if (position === "All") {
+			var checked = ev.currentTarget.checked;
+			["showQB","showRB","showWR","showTE"].forEach((position) => {
+				localStorage.setItem(position, JSON.stringify(checked));
+			});
+			this.setState({
+				showQB: checked,
+				showRB: checked,
+				showWR: checked,
+				showTE: checked
+			});
+		}
+		else {
+			this.setState({ ["show"+position]: !this.state["show"+position] });
+			localStorage.setItem("show"+position, JSON.stringify(!this.state["show"+position]));
+		}
 	},
 
 	componentDidMount: function() {
@@ -38,6 +62,7 @@ export default React.createClass({
 		var futurePicks = next && next.futurePicks.slice(0);
 		var nextFuturePick = futurePicks && futurePicks.shift();
 		var futureDifference = nextFuturePick && currentOverall && (nextFuturePick.overall - currentOverall);
+		var showAll = this.state.showQB && this.state.showRB && this.state.showWR && this.state.showTE;
 		return <section className="players">
 			<Player
 				ref="header"
@@ -61,16 +86,28 @@ export default React.createClass({
 						futureDifference = nextFuturePick && (nextFuturePick.overall - currentOverall);
 						return <div key={"my-pick-" + player.id}>
 							<div className={"player-my-pick" + (myPick ? " player-my-pick-up" : "")}>{myPick && "It's"} My next pick #{parseInt(nextPick.round,10) + "." + nextPick.pick}{myPick && "!"} (#{nextPick.overall} overall)</div>
-							{(!hideGone || player.left > 0) && <Player key={player.id} {...player} />}
+							{(!hideGone || player.left > 0) && this.state["show" + player.position] && 
+								<Player key={player.id} {...player} />
+							}
 						</div>
 					}
 					else if (!hideGone || player.left > 0) {
-						return <Player key={player.id} {...player} />
+						return this.state["show" + player.position] && 
+							<Player key={player.id} {...player} />
 					}
 				}
 			)}
 			<div className="players-options" ref="footer">
-				<label><input type="checkbox" checked={this.state.hideGone} onChange={this.handleHide} />hide taken players</label>
+				<span className="players-options-modes">
+					<label><input type="checkbox" checked={this.state.hideGone} onChange={this.handleHide} />hide taken players</label>
+				</span>
+				<span className="players-options-positions">
+					<label><input type="checkbox" checked={showAll} onChange={this.togglePosition} data-position="All" />All</label>
+					<label><input type="checkbox" checked={this.state.showQB} onChange={this.togglePosition} data-position="QB" />QB</label>
+					<label><input type="checkbox" checked={this.state.showRB} onChange={this.togglePosition} data-position="RB" />RB</label>
+					<label><input type="checkbox" checked={this.state.showWR} onChange={this.togglePosition} data-position="WR" />WR</label>
+					<label><input type="checkbox" checked={this.state.showTE} onChange={this.togglePosition} data-position="TE" />TE</label>
+				</span>
 			</div>
 		</section>
 	}

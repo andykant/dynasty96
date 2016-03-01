@@ -268,3 +268,14 @@ html, body {
 .player-my-pick-up {
 	background: #fc6162;
 }
+
+.players-options-modes,
+.players-options-positions {
+	display: inline-block;
+	margin: 0 10px;
+}
+
+.players-options label {
+	display: inline-block;
+	margin: 0 5px;
+}
