@@ -21,10 +21,6 @@ export default React.createClass({
 		localStorage.setItem("hideGone", JSON.stringify(!this.state.hideGone));
 	},
 
-	// componentDidMount: function() {
-	// 	this.componentDidUpdate();
-	// },
-
 	componentDidMount: function() {
 		// Tweak width of header/footer based on size of scrollbar
 		var el = ReactDOM.findDOMNode(this);
@@ -34,11 +30,14 @@ export default React.createClass({
 	},
 
 	render: function() {
-		var difference = this.state.next && this.state.next.difference;
-		var myPick = difference === 0;
-		var nextPick = this.state.next && this.state.next.nextPick;
+		var next = this.state.next;
 		var hideGone = !!this.state.hideGone;
+		var myPick = next && next.difference === 0;
 		var left = 0;
+		var currentOverall = next && next.currentOverall;
+		var futurePicks = next && next.futurePicks.slice(0);
+		var nextFuturePick = futurePicks && futurePicks.shift();
+		var futureDifference = nextFuturePick && currentOverall && (nextFuturePick.overall - currentOverall);
 		return <section className="players">
 			<Player
 				ref="header"
@@ -56,10 +55,12 @@ export default React.createClass({
 			{this.state.players.map(
 				(player, i) => {
 					left += player.left;
-					if (difference !== null && left >= difference) {
-						difference = null;
+					if (nextFuturePick && left >= futureDifference) {
+						var nextPick = nextFuturePick;
+						nextFuturePick = futurePicks.shift() || null;
+						futureDifference = nextFuturePick && (nextFuturePick.overall - currentOverall);
 						return <div key={"my-pick-" + player.id}>
-							<div className={"player-my-pick" + (myPick ? " player-my-pick-up" : "")}>{myPick && "It's"} My next pick #{parseInt(nextPick.round,10) + "." + nextPick.pick}{myPick && "!"} (#{this.state.next.nextOverall} overall)</div>
+							<div className={"player-my-pick" + (myPick ? " player-my-pick-up" : "")}>{myPick && "It's"} My next pick #{parseInt(nextPick.round,10) + "." + nextPick.pick}{myPick && "!"} (#{nextPick.overall} overall)</div>
 							{(!hideGone || player.left > 0) && <Player key={player.id} {...player} />}
 						</div>
 					}

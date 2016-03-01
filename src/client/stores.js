@@ -179,13 +179,15 @@ export var Next = Reflux.createStore({
 		if (this.franchise && this.draftResults) {
 			var franchise = this.franchise;
 			var currentPick = this.draftResults.find((pick) => pick.timestamp === 0);
-			var nextPick = this.draftResults.find((pick) => pick.timestamp === 0 && pick.franchise === franchise.id);
+			var futurePicks = this.draftResults.filter((pick) => pick.timestamp === 0 && pick.franchise === franchise.id);
+			var nextPick = futurePicks[0];
 			var difference = currentPick && nextPick ? (this.overall(nextPick) - this.overall(currentPick)) : null;
 
 			this.pick = {
 				difference: difference,
 				currentPick: currentPick,
 				nextPick: nextPick,
+				futurePicks: futurePicks.map((pick) => { return { round: pick.round, pick: pick.pick, overall: this.overall(pick) } }),
 				currentOverall: this.overall(currentPick),
 				nextOverall: this.overall(nextPick)
 			};
