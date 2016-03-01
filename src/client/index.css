@@ -237,11 +237,16 @@ html, body {
 
 .franchise-donate a {
 	text-decoration: none;
-	color: #67b3dd;
+	background-color: #67b3dd;
+	color: #fff;
+	display: inline-block;
+	border-radius: 5px;
+	padding: 3px 5px 0;
 }
 
 .franchise-donate a:hover {
 	text-decoration: underline;
+	background-color: #4d9cc7;
 }
 
 .franchise-next-draft {

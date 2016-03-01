@@ -14,6 +14,20 @@ socket.on("players", (players) => Actions.players(players));
 socket.on("draftResults", (draftResults) => Actions.draftResults(draftResults));
 socket.on("delta", (deltas) => Actions.deltas(deltas));
 
+// Listen for forced reload
+var INIT = false;
+socket.on("init", () => {
+  if (INIT) {
+    setTimeout(function() {
+      location.reload();
+    }, 1000);
+  }
+  else {
+  	INIT = true;
+  }
+});
+
+// Set up franchise
 Actions.franchise.listen((id) => {
 	socket.emit("franchise", id);
 });
