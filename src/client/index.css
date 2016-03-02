@@ -316,7 +316,66 @@ html, body {
 	margin: 0 10px;
 }
 
-.players-options label {
+.players-options label,
+.franchise-options label {
 	display: inline-block;
 	margin: 0 5px;
 }
+
+.depth {
+	margin-bottom: -10px;
+}
+
+.depth-team {
+	display: inline-block;
+	width: 127px;
+	margin-right: 23px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.depth-title {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 127px;
+	display: inline-block;
+	margin-bottom: -10px;
+}
+
+.depth-title-rating {
+	float: right;
+	margin-left: 10px;
+}
+
+.depth-title-rating-GOOD {
+	color: #71bf42;
+}
+
+.depth-title-rating-BAD {
+	color: #fc6162;
+}
+
+.depth-players {
+	display: block;
+	width: 127px;
+	line-height: 13px;
+}
+
+.depth-position {
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	margin-right: 3px;
+	display: inline-block;
+}
+
+.depth-position:nth-of-type(10n) {
+	margin-right: 0;
+}
+
+.depth-position-QB { background-color: #67b3dd; }
+.depth-position-RB { background-color: #71bf42; }
+.depth-position-WR { background-color: #fc6162; }
+.depth-position-TE { background-color: #9c49b6; }
+.depth-position-None { background-color: #eee; }

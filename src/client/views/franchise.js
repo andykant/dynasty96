@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Modal from "react-modal";
 import Reflux from "reflux";
 import Actions from "../actions";
 import { Franchise, League, DraftResults, Players, Next } from "../stores";
 import Team from "./team";
 import Player from "./player";
-
+import Depth from "./depth";
+import { SHORT_BUS } from "../index";
 
 export default React.createClass({
 	mixins: [
@@ -17,8 +19,13 @@ export default React.createClass({
 
 	getInitialState: function() {
 		return {
-			showLog: false
+			showLog: false,
+			showDepth: false
 		};
+	},
+
+	toggleDepth: function(ev) {
+		this.setState({ showDepth: !this.state.showDepth });
 	},
 
 	toggleLog: function(ev) {
@@ -76,6 +83,14 @@ export default React.createClass({
 			}
 			<div className="franchise-options" ref="footer">
 				<label><input type="checkbox" checked={showLog} onChange={this.toggleLog} />Show log</label>
+				{SHORT_BUS && <label><input type="checkbox" checked={this.state.showDepth} onChange={this.toggleDepth} />Show depth</label>}
+				{this.state.showDepth && 
+					<Modal isOpen={this.state.showDepth} onRequestClose={this.toggleDepth} style={{
+						overlay: { backgroundColor: "rgba(0,0,0,0.5)" }
+					}}>
+						<Depth league={this.state.league} draftResults={this.state.draftResults} />
+					</Modal>
+				}
 			</div>
 		</div>
 	},

@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Modal from "react-modal";
 import Actions from "./actions";
 import App from "./views/index";
 import config from "../config";
@@ -31,10 +32,11 @@ socket.on("init", () => {
 Actions.franchise.listen((id) => {
 	socket.emit("franchise", id);
 });
-var id;
-if (id = localStorage.getItem("franchise")) {
+var id = localStorage.getItem("franchise");
+export var SHORT_BUS = id === "0066";
+if (id) {
 	socket.emit("franchise", id);
-	if (id === "0066") {
+	if (SHORT_BUS) {
 		socket.emit("usage", (usage) => {
 			console.log(usage);
 			Object.keys(usage).forEach((key) => console.log(usage[key].name, usage[key].count));
@@ -43,5 +45,6 @@ if (id = localStorage.getItem("franchise")) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+	Modal.setAppElement(document.getElementById("app"));
 	ReactDOM.render(<App />, document.getElementById("app"));
 }, false);
