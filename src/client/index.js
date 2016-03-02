@@ -33,10 +33,9 @@ Actions.franchise.listen((id) => {
 	socket.emit("franchise", id);
 });
 var id = localStorage.getItem("franchise");
-export var SHORT_BUS = id === "0066";
 if (id) {
 	socket.emit("franchise", id);
-	if (SHORT_BUS) {
+	if (id === "0066") {
 		socket.emit("usage", (usage) => {
 			console.log(usage);
 			Object.keys(usage).forEach((key) => console.log(usage[key].name, usage[key].count));

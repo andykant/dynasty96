@@ -7,7 +7,8 @@ import { Franchise, League, DraftResults, Players, Next } from "../stores";
 import Team from "./team";
 import Player from "./player";
 import Depth from "./depth";
-import { SHORT_BUS } from "../index";
+
+var SHORT_BUS = localStorage.getItem("franchise") === "0066";
 
 export default React.createClass({
 	mixins: [
