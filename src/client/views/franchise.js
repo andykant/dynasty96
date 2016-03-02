@@ -8,7 +8,7 @@ import Team from "./team";
 import Player from "./player";
 import Depth from "./depth";
 
-var SHORT_BUS = localStorage.getItem("franchise") === "0066";
+var SPECIAL_POWERS = ["0066","0046","0012","0001","0041","0079","0094","0067"];
 
 export default React.createClass({
 	mixins: [
@@ -52,6 +52,7 @@ export default React.createClass({
 
 	renderFranchise: function() {
 		var franchise = this.state.franchise;
+		var IS_SPECIAL = !!franchise && SPECIAL_POWERS.indexOf(franchise.id) > -1;
 		var next = this.state.next;
 		var showLog = this.state.showLog;
 		var draftResults = this.state.draftResults.filter((pick) => !!pick.player);
@@ -84,7 +85,7 @@ export default React.createClass({
 			}
 			<div className="franchise-options" ref="footer">
 				<label><input type="checkbox" checked={showLog} onChange={this.toggleLog} />Show log</label>
-				{SHORT_BUS && <label><input type="checkbox" checked={this.state.showDepth} onChange={this.toggleDepth} />Show depth</label>}
+				{IS_SPECIAL && <label><input type="checkbox" checked={this.state.showDepth} onChange={this.toggleDepth} />Show depth</label>}
 				{this.state.showDepth && 
 					<Modal isOpen={this.state.showDepth} onRequestClose={this.toggleDepth} style={{
 						overlay: { backgroundColor: "rgba(0,0,0,0.5)" }
