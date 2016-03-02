@@ -8,7 +8,7 @@ import Team from "./team";
 import Player from "./player";
 import Depth from "./depth";
 
-var SPECIAL_POWERS = ["0066","0046","0012","0001","0041","0079","0094","0067","0021","0052","0037","0093","0025"];
+var SPECIAL_POWERS = ["0066","0046","0012","0001","0041","0079","0094","0067","0021","0052","0037","0093","0025","0043"];
 
 export default React.createClass({
 	mixins: [
