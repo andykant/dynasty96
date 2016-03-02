@@ -6,6 +6,7 @@ var overall = (pick) => (parseInt(pick.round,10) - 1) * 96 + parseInt(pick.pick,
 
 export default React.createClass({
 	render: function() {
+		var id = (this.props.franchise && this.props.franchise.id) || "";
 		var league = this.props.league;
 		var draftResults = this.props.draftResults || [];
 		return <div className="depth">
@@ -19,7 +20,11 @@ export default React.createClass({
 				<span className="depth-title-rating depth-title-rating-OKAY">Even Average Value</span>
 				<span className="depth-title-rating depth-title-rating-BAD">+Poor Average Value</span>
 			</div>
-			{league && league.map((franchise) => {
+			{league && league.sort((a,b) => {
+				if (a.id === id) return -1;
+				else if (b.id === id) return 1;
+				else return parseInt(a.id,10) - parseInt(b.id,10);
+			}).map((franchise) => {
 				var rating = 0;
 				var count = 0;
 				var picks = draftResults.filter((pick) => pick.franchise === franchise.id).map((pick) => {
@@ -32,11 +37,12 @@ export default React.createClass({
 						rating += pick.diff;
 					}
 				});
-				return <div className="depth-team" key={franchise.id}>
+				rating = Math.round(rating / count * 10) / 10;
+				return <div className={"depth-team" + (id === franchise.id ? " depth-team-mine" : "")} key={franchise.id}>
 					<span className="depth-title">
 						{count && (
-							rating / count >= 12 ? <span className="depth-title-rating depth-title-rating-BAD">+{rating}</span>
-							: rating / count <= -12 ? <span className="depth-title-rating depth-title-rating-GOOD">{rating}</span>
+							rating >= 12 ? <span className="depth-title-rating depth-title-rating-BAD">+{rating}</span>
+							: rating <= -12 ? <span className="depth-title-rating depth-title-rating-GOOD">{rating}</span>
 							: <span className="depth-title-rating depth-title-rating-OKAY">{rating}</span>
 						)}
 						<span className="depth-title-name">{franchise.name.replace(/\<.+?\>/g,"")}</span>

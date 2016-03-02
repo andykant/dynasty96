@@ -334,6 +334,10 @@ html, body {
 	overflow: hidden;
 }
 
+.depth-team-mine {
+	font-weight: bold;
+}
+
 .depth-title {
 	overflow: hidden;
 	white-space: nowrap;

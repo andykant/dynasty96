@@ -90,7 +90,7 @@ export default React.createClass({
 					<Modal isOpen={this.state.showDepth} onRequestClose={this.toggleDepth} style={{
 						overlay: { backgroundColor: "rgba(0,0,0,0.5)" }
 					}}>
-						<Depth league={this.state.league} draftResults={this.state.draftResults} />
+						<Depth franchise={this.state.franchise} league={this.state.league} draftResults={this.state.draftResults} />
 					</Modal>
 				}
 			</div>
