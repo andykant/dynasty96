@@ -23,7 +23,11 @@ export default React.createClass({
 			{league && league.sort((a,b) => {
 				if (a.id === id) return -1;
 				else if (b.id === id) return 1;
-				else return parseInt(a.id,10) - parseInt(b.id,10);
+				var aName = a.name.replace(/\<.+?\>/g,"").toLowerCase();
+				var bName = b.name.replace(/\<.+?\>/g,"").toLowerCase();
+				if (aName > bName) return 1;
+				else if (aName < bName) return -1;
+				return 0;
 			}).map((franchise) => {
 				var rating = 0;
 				var count = 0;
