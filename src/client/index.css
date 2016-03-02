@@ -352,6 +352,10 @@ html, body {
 	color: #71bf42;
 }
 
+.depth-title-rating-OKAY {
+	color: #bbb;
+}
+
 .depth-title-rating-BAD {
 	color: #fc6162;
 }
@@ -379,3 +383,18 @@ html, body {
 .depth-position-WR { background-color: #fc6162; }
 .depth-position-TE { background-color: #9c49b6; }
 .depth-position-None { background-color: #eee; }
+
+.depth-legend {
+	margin-bottom: 10px;
+}
+
+.depth-legend .depth-position,
+.depth-legend .depth-title-rating {
+	float: none;
+	margin-left: 10px;
+	display: inline-block;
+}
+
+.depth-legend .depth-position-QB {
+	margin-left: 0;
+}

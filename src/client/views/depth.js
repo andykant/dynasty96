@@ -9,6 +9,16 @@ export default React.createClass({
 		var league = this.props.league;
 		var draftResults = this.props.draftResults || [];
 		return <div className="depth">
+			<div className="depth-legend">
+				<span className="depth-position depth-position-QB"></span>QB
+				<span className="depth-position depth-position-RB"></span>RB
+				<span className="depth-position depth-position-WR"></span>WR
+				<span className="depth-position depth-position-TE"></span>TE
+				<span className="depth-position depth-position-None"></span>Undrafted
+				<span className="depth-title-rating depth-title-rating-GOOD">-Good Average Value</span>
+				<span className="depth-title-rating depth-title-rating-OKAY">Even Average Value</span>
+				<span className="depth-title-rating depth-title-rating-BAD">+Poor Average Value</span>
+			</div>
 			{league && league.map((franchise) => {
 				var rating = 0;
 				var count = 0;
@@ -25,7 +35,7 @@ export default React.createClass({
 				return <div className="depth-team" key={franchise.id}>
 					<span className="depth-title">
 						{count && (
-							rating / count >= 12 ? <span className="depth-title-rating depth-title-rating-BAD">{rating}</span>
+							rating / count >= 12 ? <span className="depth-title-rating depth-title-rating-BAD">+{rating}</span>
 							: rating / count <= -12 ? <span className="depth-title-rating depth-title-rating-GOOD">{rating}</span>
 							: <span className="depth-title-rating depth-title-rating-OKAY">{rating}</span>
 						)}
