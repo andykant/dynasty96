@@ -67,7 +67,7 @@ export default React.createClass({
 		return <div className={"franchise-roster" + (showLog ? " franchise-roster-log" : "")} ref="roster" key="roster">
 			<div className="franchise-status" ref="header">
 				<Team {...franchise} onClick={Actions.clearFranchise} />
-				{franchise.id !== "0066" && <div className="franchise-donate">
+				{!IS_SPECIAL && <div className="franchise-donate">
 					Was this app helpful? <a href="https://www.paypal.me/andykant/5" target="_blank">Donate!</a>
 				</div>}
 				{next && next.difference !== null && <div className="franchise-next">
