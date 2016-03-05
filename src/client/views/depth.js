@@ -1,14 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Tooltip from "react-tooltip";
 import { Players } from "../stores";
 
 var overall = (pick) => (parseInt(pick.round,10) - 1) * 96 + parseInt(pick.pick,10);
 
 export default React.createClass({
+	getInitialState: function() {
+		return {
+			mode: "all"
+		};
+	},
+
+	toggle: function(ev) {
+		this.setState({ mode: ev.currentTarget.value });
+	},
+
 	render: function() {
 		var id = (this.props.franchise && this.props.franchise.id) || "";
 		var league = this.props.league;
 		var draftResults = this.props.draftResults || [];
+		var mode = this.state.mode;
 		return <div className="depth">
 			<div className="depth-legend">
 				<span className="depth-position depth-position-QB"></span>QB
@@ -16,11 +28,14 @@ export default React.createClass({
 				<span className="depth-position depth-position-WR"></span>WR
 				<span className="depth-position depth-position-TE"></span>TE
 				<span className="depth-position depth-position-None"></span>Undrafted
-				<span className="depth-title-rating depth-title-rating-GOOD">-Good Average Value</span>
-				<span className="depth-title-rating depth-title-rating-OKAY">Even Average Value</span>
-				<span className="depth-title-rating depth-title-rating-BAD">+Poor Average Value</span>
+				<span className="depth-title-rating depth-title-rating-GOOD">-Good vs DLF ADP</span>
+				<span className="depth-title-rating depth-title-rating-OKAY">Even vs DLF ADP</span>
+				<span className="depth-title-rating depth-title-rating-BAD">+Poor vs DLF ADP</span>
+				<label><input type="radio" name="depth-players" checked={mode === "all"} value="all" onChange={this.toggle} />All players</label>
+				<label><input type="radio" name="depth-players" checked={mode === "veterans"} value="veterans" onChange={this.toggle} />Veterans only</label>
+				<label><input type="radio" name="depth-players" checked={mode === "rookies"} value="rookies" onChange={this.toggle} />Rookies only</label>
 			</div>
-			{league && league.sort((a,b) => {
+			{league && league.slice(0).sort((a,b) => {
 				if (a.id === id) return -1;
 				else if (b.id === id) return 1;
 				var aName = a.name.replace(/\<.+?\>/g,"").toLowerCase();
@@ -30,35 +45,43 @@ export default React.createClass({
 				return 0;
 			}).map((franchise) => {
 				var rating = 0;
+				var rating2 = 0;
 				var count = 0;
+				var count2 = 0;
 				var picks = draftResults.filter((pick) => pick.franchise === franchise.id).map((pick) => {
 					return { overall: overall(pick), player: pick.player && Players.byId(pick.player) };
 				});
 				picks.forEach((pick) => {
 					if (pick.player && pick.player.dlf_adp) {
-						count++;
 						pick.diff = pick.player.dlf_adp - pick.overall;
 						rating += pick.diff;
+						count++;
+						if (mode !== "all" && (mode === "veterans" ? pick.player.status !== "R" : pick.player.status === "R")) {
+							rating2 += pick.diff;
+							count2++;
+						}
 					}
 				});
-				rating = Math.round(rating / count * 10) / 10;
+				rating = count && Math.round(rating / count);
+				rating2 = count2 && Math.round(rating2 / count2);
 				return <div className={"depth-team" + (id === franchise.id ? " depth-team-mine" : "")} key={franchise.id}>
 					<span className="depth-title">
-						{count && (
-							rating >= 12 ? <span className="depth-title-rating depth-title-rating-BAD">+{rating}</span>
-							: rating <= -12 ? <span className="depth-title-rating depth-title-rating-GOOD">{rating}</span>
-							: <span className="depth-title-rating depth-title-rating-OKAY">{rating}</span>
-						)}
+						{mode === "veterans" || mode === "rookies"
+							? <span data-tip="Average of veterans only" className={"depth-title-rating depth-title-rating-" + (rating2 >= 12 ? "BAD" : rating2 <= -12 ? "GOOD" : "OKAY")}>{rating2 > 0 && "+"}{rating2}</span>
+							: <span data-tip="Average of all players" className={"depth-title-rating depth-title-rating-" + (rating >= 12 ? "BAD" : rating <= -12 ? "GOOD" : "OKAY")}>{rating > 0 && "+"}{rating}</span>
+						}
 						<span className="depth-title-name">{franchise.name.replace(/\<.+?\>/g,"")}</span>
 					</span>
 					<span className="depth-players">
 						{picks.map((pick) => {
 							var player = pick.player;
-							return <span key={pick.overall} className={"depth-position depth-position-" + (player.position || "None")} title={player && (player.name + " (" + pick.diff + ")")}></span>
+							var fade = (mode === "rookies" && !player.status) || (mode === "veterans" && (player.status === "R" || !player.position));
+							return <span key={pick.overall} className={"depth-position depth-position-" + (player.position || "None") + (fade ? " depth-position-fade" : "")} data-tip={player && (player.name + " (" + pick.diff + ")")}></span>
 						})}
 					</span>
 				</div>
 			})}
+			<Tooltip effect="solid" type="dark" class="depth-tip" />
 		</div>
 	}
 });

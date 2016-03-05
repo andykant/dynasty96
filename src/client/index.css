@@ -88,7 +88,6 @@ html, body {
 	background: #fff;
 	border-top: 1px solid #eee;
 	padding: 3px 3px 0;
-	z-index: 2;
 	text-align: center;
 }
 
@@ -117,13 +116,11 @@ html, body {
 	background: #eee;
 }
 
-.players-options input,
-.franchise-options input {
+input {
 	margin-right: 5px;
 }
 
-.players-options label:hover,
-.franchise-options label:hover {
+label:hover {
 	text-decoration: underline;
 	cursor: pointer;
 }
@@ -322,11 +319,12 @@ html, body {
 
 .depth {
 	margin-bottom: -10px;
+	will-change: opacity;
 }
 
 .depth-team {
 	display: inline-block;
-	width: 127px;
+	width: 157px;
 	margin-right: 23px;
 	margin-bottom: 10px;
 	overflow: hidden;
@@ -340,14 +338,15 @@ html, body {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	width: 127px;
+	width: 157px;
 	display: inline-block;
 	margin-bottom: -10px;
 }
 
 .depth-title-rating {
 	float: right;
-	margin-left: 10px;
+	text-align: center;
+	width: 30px;
 }
 
 .depth-title-rating-GOOD {
@@ -364,18 +363,17 @@ html, body {
 
 .depth-players {
 	display: block;
-	width: 127px;
+	width: 157px;
 	line-height: 13px;
 }
 
 .depth-position {
-	width: 10px;
-	height: 10px;
-	border-radius: 5px;
+	width: 13px;
+	height: 13px;
+	border-radius: 10px;
 	margin-right: 3px;
 	display: inline-block;
 }
-
 .depth-position:nth-of-type(10n) {
 	margin-right: 0;
 }
@@ -384,19 +382,41 @@ html, body {
 .depth-position-RB { background-color: #71bf42; }
 .depth-position-WR { background-color: #fc6162; }
 .depth-position-TE { background-color: #9c49b6; }
-.depth-position-None { background-color: #eee; }
+.depth-position-None { background-color: #f6f6f6; }
+
+.depth-position-fade {
+	opacity: 0.2;
+}
+
+.depth-position-None.depth-position-fade {
+	opacity: 1;
+}
 
 .depth-legend {
 	margin-bottom: 10px;
 }
 
 .depth-legend .depth-position,
-.depth-legend .depth-title-rating {
+.depth-legend .depth-title-rating,
+.depth-legend label {
 	float: none;
 	margin-left: 10px;
 	display: inline-block;
+	text-align: left;
+}
+
+.depth-legend .depth-title-rating {
+	width: auto;
 }
 
 .depth-legend .depth-position-QB {
 	margin-left: 0;
+}
+
+[data-tip] {
+	cursor: pointer;
+}
+
+.depth-tip {
+	font-size: 16px !important;
 }
