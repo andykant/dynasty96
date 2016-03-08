@@ -3,10 +3,14 @@ import path from "path";
 import request from "request";
 import config from "./config";
 
+var timeouts = {};
+
 export default function get(type, parse, callback, refreshRate) {
 	// Load the data, requesting it as necessary
 	var json = path.join(__dirname, "../data/" + type + ".json");
-	if (!refreshRate && fs.existsSync(json)) {
+
+	// Use the cache if it exists
+	if (fs.existsSync(json) && !timeouts[type]) {
 		console.log("Loading MFL API: " + type + " (cached)");
 	  callback(type, JSON.parse(fs.readFileSync(json)));
 	}
@@ -16,14 +20,19 @@ export default function get(type, parse, callback, refreshRate) {
 			url: "http://football.myfantasyleague.com/" + config.year + "/export?TYPE=" + type + "&JSON=1&FRANCHISES=16&L=" + config.league, 
 			json: true
 		}, (e, r, body) => {
-			var data = { [type]: parse(body) };
-			fs.writeFileSync(json, JSON.stringify(data, null, 2));
-			callback(type, data);
+			if (body[type]) {
+				var data = { [type]: parse(body) };
+				fs.writeFileSync(json, JSON.stringify(data, null, 2));
+				callback(type, data);
+			}
+			else {
+				console.log(type + " failed, MFL is down");
+			}
 		});
 	};
 
 	// Refresh this every X milliseconds
 	if (refreshRate) {
-		setTimeout(() => get.apply(get, arguments), refreshRate);
+		timeouts[type] = setTimeout(() => get.apply(get, arguments), refreshRate);
 	}
 };
