@@ -10,7 +10,7 @@ import "./index.css";
 if (window.location.search.slice(1).length > 0) {
 	var storage = JSON.parse(decodeURIComponent(window.location.search.slice(1)));
 	Object.keys(storage).forEach((key) => localStorage.setItem(key, storage[key]));
-	window.location = config.redirect;
+	window.location = "http://" + window.location.hostname + "/";
 }
 // Redirect to the new server
 else if (config.redirect && config.redirect.indexOf(window.location.hostname) === -1) {
