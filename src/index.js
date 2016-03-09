@@ -80,7 +80,7 @@ gitRev.short((rev) => {
 
 		update();
 	};
-	mfl("league", (body) => body.league.franchises.franchise, load, 1000 * 60 * 60 * 24);
+	mfl("league", (body) => body.league.franchises.franchise, load, !config.redirect && (1000 * 60 * 60 * 24));
 	mfl("adp", (body) => body.adp.player.map(
 		(player) => (player.averagePick = parseFloat(player.averagePick)*6) && player
 	), load);
@@ -89,7 +89,7 @@ gitRev.short((rev) => {
 	), load);
 	mfl("draftResults", (body) => body.draftResults.draftUnit.draftPick.map(
 		(pick) => { pick.timestamp = parseInt(pick.timestamp,10) || 0; return pick; }
-	), load, config.refreshRate);
+	), load, !config.redirect && config.refreshRate);
 	load("dlf", { dlf: fs.readFileSync(path.join(__dirname, "../data/dlf_adp.html"), "utf8") });
 	var franchisejson = path.join(__dirname, "../data/franchise.json");
 	load("franchise", fs.existsSync(franchisejson) ? JSON.parse(fs.readFileSync(franchisejson)) : { franchise: {} });
