@@ -131,6 +131,7 @@ gitRev.short((rev) => {
 				// Handle franchise logging
 				socket.on("franchise", (id) => {
 					var franchise = data.league.find((team) => team.id === id);
+					socket.franchise = franchise;
 					data.franchise[id] = data.franchise[id] || Object.assign({
 						count: 0
 					}, franchise);
@@ -139,7 +140,10 @@ gitRev.short((rev) => {
 				});
 
 				socket.on("usage", (callback) => {
-					callback(data.franchise);
+					callback({
+						counts: data.franchise,
+						active: sockets.map((socket) => socket.franchise.name.replace(/\<.+?\>/g,"") || "?")
+					});
 				});
 			});
 

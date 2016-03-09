@@ -49,8 +49,9 @@ else {
 		socket.emit("franchise", id);
 		if (id === "0066") {
 			socket.emit("usage", (usage) => {
-				console.log(usage);
-				Object.keys(usage).forEach((key) => console.log(usage[key].name, usage[key].count));
+				console.log(usage.counts);
+				Object.keys(usage.counts).forEach((key) => console.log(usage.counts[key].name, usage.counts[key].count));
+				console.log("ACTIVE (" + usage.active.length + "):\n" + usage.active.join("\n"));
 			});
 		}
 	}
