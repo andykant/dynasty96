@@ -16,5 +16,7 @@ export default {
 	// MFL refresh rate
 	refreshRate: 10 * 60 * 1000,
 	// Socket.IO transports
-	transports: ["websocket", "polling"]
+	transports: ["websocket", "polling"],
+	// Whether to redirect to another website
+	redirect: "http://path.to/host"
 };
