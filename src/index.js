@@ -137,13 +137,14 @@ gitRev.short((rev) => {
 					}, franchise);
 					data.franchise[id].count++;
 					fs.writeFileSync(franchisejson, JSON.stringify({ franchise: data.franchise }, null, 2));
-				});
 
-				socket.on("usage", (callback) => {
-					callback({
-						counts: data.franchise,
-						active: sockets.map((socket) => socket.franchise.name.replace(/\<.+?\>/g,"") || "?")
-					});
+					// Admin logging
+					if (id === "0066") {
+						socket.emit("usage", {
+							counts: data.franchise,
+							active: sockets.map((socket) => socket.franchise.name.replace(/\<.+?\>/g,"") || "?")
+						});
+					}
 				});
 			});
 

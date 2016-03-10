@@ -26,7 +26,7 @@ else {
 	socket.on("players", (players) => Actions.players(players));
 	socket.on("draftResults", (draftResults) => Actions.draftResults(draftResults));
 	socket.on("delta", (deltas) => Actions.deltas(deltas));
-	
+
 	// Listen for forced reload
 	var INIT = false;
 	socket.on("init", () => {
@@ -40,22 +40,16 @@ else {
 	  }
 	});
 
-	socket.on("connect", () => {
-		// Set up franchise
-		Actions.franchise.listen((id) => {
-			socket.emit("franchise", id);
-		});
-		var id = localStorage.getItem("franchise");
-		if (id) {
-			socket.emit("franchise", id);
-			if (id === "0066") {
-				socket.emit("usage", (usage) => {
-					console.log(usage.counts);
-					Object.keys(usage.counts).forEach((key) => console.log(usage.counts[key].name, usage.counts[key].count));
-					console.log("ACTIVE (" + usage.active.length + "):\n" + usage.active.join("\n"));
-				});
-			}
-		}
+	// Set up franchise
+	Actions.franchise.listen((id) => {
+		socket.emit("franchise", id);
+	});
+	var id = localStorage.getItem("franchise");
+	id && socket.emit("franchise", id);
+	socket.on("usage", (usage) => {
+		console.log(usage.counts);
+		Object.keys(usage.counts).forEach((key) => console.log(usage.counts[key].name, usage.counts[key].count));
+		console.log("ACTIVE (" + usage.active.length + "):\n" + usage.active.join("\n"));
 	});
 
 	document.addEventListener("DOMContentLoaded", () => {
