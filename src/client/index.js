@@ -19,7 +19,7 @@ else if (config.redirect && config.redirect.indexOf(window.location.hostname) ==
 // Otherwise load like normal
 else {
 	var timestamp = () => Math.floor(Date.now() / 1000);
-	var socket = io();
+	var socket = io({ transports: ["polling"] });
 
 	console.log("Dynasty96", timestamp());
 	socket.on("league", (league) => Actions.league(league));
