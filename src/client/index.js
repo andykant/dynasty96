@@ -44,14 +44,16 @@ else {
 	Actions.franchise.listen((id) => {
 		socket.emit("franchise", id);
 	});
+	socket.on("usage", (usage) => {
+		console.log(usage.counts);
+		Object.keys(usage.counts).forEach((key) => console.log(usage.counts[key].name, usage.counts[key].count));
+		console.log("ACTIVE (" + usage.active.length + "):\n" + usage.active.join("\n"));
+	});
 	socket.on("connect", () => {
 		var id = localStorage.getItem("franchise");
-		id && socket.emit("franchise", id);
-		socket.on("usage", (usage) => {
-			console.log(usage.counts);
-			Object.keys(usage.counts).forEach((key) => console.log(usage.counts[key].name, usage.counts[key].count));
-			console.log("ACTIVE (" + usage.active.length + "):\n" + usage.active.join("\n"));
-		});
+		if (id) {
+			socket.emit("franchise", id);
+		}
 	});
 
 	document.addEventListener("DOMContentLoaded", () => {
