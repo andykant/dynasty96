@@ -142,7 +142,7 @@ gitRev.short((rev) => {
 					if (id === "0066") {
 						socket.emit("usage", {
 							counts: data.franchise,
-							active: sockets.map((socket) => socket.franchise.name.replace(/\<.+?\>/g,"") || "?")
+							active: sockets.map((socket) => (socket.franchise && socket.franchise.name && socket.franchise.name.replace(/\<.+?\>/g,"")) || "?")
 						});
 					}
 				});

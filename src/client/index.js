@@ -19,7 +19,7 @@ else if (config.redirect && config.redirect.indexOf(window.location.hostname) ==
 // Otherwise load like normal
 else {
 	var timestamp = () => Math.floor(Date.now() / 1000);
-	var socket = io({ transports: ["polling"] });
+	var socket = io();
 
 	console.log("Dynasty96", timestamp());
 	socket.on("league", (league) => Actions.league(league));
@@ -49,12 +49,10 @@ else {
 		Object.keys(usage.counts).forEach((key) => console.log(usage.counts[key].name, usage.counts[key].count));
 		console.log("ACTIVE (" + usage.active.length + "):\n" + usage.active.join("\n"));
 	});
-	socket.on("connect", () => {
-		var id = localStorage.getItem("franchise");
-		if (id) {
-			socket.emit("franchise", id);
-		}
-	});
+	var id = localStorage.getItem("franchise");
+	if (id) {
+		socket.emit("franchise", id);
+	}
 
 	document.addEventListener("DOMContentLoaded", () => {
 		Modal.setAppElement(document.getElementById("app"));
