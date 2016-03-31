@@ -172,7 +172,7 @@ export var Next = Reflux.createStore({
 	},
 
 	overall: function(pick) {
-		return (parseInt(pick.round,10) - 1) * 96 + parseInt(pick.pick,10);
+		return pick ? (parseInt(pick.round,10) - 1) * 96 + parseInt(pick.pick,10) : "";
 	},
 
 	update: function() {
