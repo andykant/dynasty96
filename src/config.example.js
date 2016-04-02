@@ -13,8 +13,10 @@ export default {
 	year: 2016,
 	// MFL Positions
 	positions: ["QB","RB","WR","TE"],
-	// MFL refresh rate
+	// MFL draft result refresh rate
 	refreshRate: 10 * 60 * 1000,
+	// MFL league refresh rate
+	leagueRefreshRate: 1000 * 60 * 60 * 24,
 	// Socket.IO transports
 	transports: ["websocket", "polling"],
 	// Whether to redirect to another website

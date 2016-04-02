@@ -80,7 +80,7 @@ gitRev.short((rev) => {
 
 		update();
 	};
-	mfl("league", (body) => body.league.franchises.franchise, load, !config.redirect && (1000 * 60 * 60 * 24));
+	mfl("league", (body) => body.league.franchises.franchise, load, !config.redirect && config.leagueRefreshRate);
 	mfl("adp", (body) => body.adp.player.map(
 		(player) => (player.averagePick = parseFloat(player.averagePick)*6) && player
 	), load);
