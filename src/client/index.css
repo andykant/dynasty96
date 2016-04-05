@@ -43,6 +43,11 @@ html, body {
 	position: relative;
 }
 
+#ranks {
+	padding: 20px 100px;
+	margin: 0 auto;
+}
+
 .players {
 	background: #fff;
 	margin-left: 241px;
@@ -329,6 +334,9 @@ label:hover {
 	margin-bottom: 10px;
 	overflow: hidden;
 }
+
+#ranks .depth-team { width: 300px; }
+#ranks .depth-title { width: 300px; }
 
 .depth-team-mine {
 	font-weight: bold;
