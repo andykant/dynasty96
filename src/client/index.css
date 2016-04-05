@@ -43,11 +43,6 @@ html, body {
 	position: relative;
 }
 
-#ranks {
-	padding: 20px 100px;
-	margin: 0 auto;
-}
-
 .players {
 	background: #fff;
 	margin-left: 241px;
@@ -334,10 +329,6 @@ label:hover {
 	margin-bottom: 10px;
 	overflow: hidden;
 }
-
-#ranks .depth-team { width: 300px; }
-#ranks .depth-title { width: 300px; }
-
 .depth-team-mine {
 	font-weight: bold;
 }
@@ -378,7 +369,7 @@ label:hover {
 .depth-position {
 	width: 13px;
 	height: 13px;
-	border-radius: 10px;
+	border-radius: 50px;
 	margin-right: 3px;
 	display: inline-block;
 }
@@ -427,4 +418,60 @@ label:hover {
 
 .depth-tip {
 	font-size: 16px !important;
+}
+
+#ranks {
+	margin: 20px auto;
+	width: 600px;
+}
+
+#ranks .depth-team {
+	display: block;
+	width: 600px;
+}
+
+#ranks .depth-legend {
+	margin-left: 100px;
+}
+
+#ranks .depth-title, #ranks .depth-players {
+	width: auto;
+}
+
+#ranks .depth-title {
+	font-size: 110%;
+}
+
+#ranks .depth-players .depth-position, 
+#ranks .depth-players .depth-position:nth-of-type(10n) {
+	box-sizing: content-box;
+	margin: 0;
+}
+
+.ranks-rank {
+	height: 51px;
+	display: block;
+	width: 100px;
+	line-height: 51px;
+	float: left;
+	font-size: 120%;
+}
+
+.ranks-rank-index {
+	height: 51px;
+	display: block;
+	width: 25px;
+	line-height: 51px;
+	float: left;
+	color: #bbb;
+	text-align: center;
+}
+
+.ranks-rank-score {
+	height: 51px;
+	display: block;
+	width: 75px;
+	line-height: 51px;
+	float: left;
+	text-align: center;
 }

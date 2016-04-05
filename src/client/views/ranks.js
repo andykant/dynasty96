@@ -29,6 +29,7 @@ export default React.createClass({
 			franchise.roster && franchise.roster.forEach((p, index) => {
 				if (p) {
 					var rank = p.ranks.fantasypros_standard ? (300 - p.ranks.fantasypros_standard) : 0;
+					p.radius = 13 + Math.log(Math.max(1, rank - 100)) / Math.log(1.7)
 
 					// Determine depth score
 					score += rank;
@@ -69,14 +70,15 @@ export default React.createClass({
 
 			{league && league.map((franchise, index) => {
 				return <div className={"depth-team" + (id === franchise.id ? " depth-team-mine" : "")} key={franchise.id}>
+					<span className="ranks-rank">
+						<span className="ranks-rank-index">{1 + index}</span>
+						<span className="ranks-rank-score">{franchise.lineup}</span>
+					</span>
 					<span className="depth-title">
-						<span className="depth-title-rating depth-title-rating-GOOD">{franchise.lineup}</span>
-						<span className="depth-title-rating depth-title-rating-BAD">{franchise.depth}</span>
-						<span className="depth-title-rating depth-title-rating-OKAY">{franchise.score}</span>
 						<span className="depth-title-name">{franchise.name.replace(/\<.+?\>/g,"")}</span>
 					</span>
 					<span className="depth-players">
-					{franchise.roster && franchise.roster.map((p) => p && <span key={p.id} data-tip={p.name + " " + (p.ranks.fantasypros_standard || "?") + " " + p.position + (p.ranks.fantasypros_standard_position || "?")} className={"depth-position depth-position-" + p.position}></span>)}
+					{franchise.roster && franchise.roster.map((p) => p && <span key={p.id} data-tip={p.name + " " + (p.ranks.fantasypros_standard || "?") + " " + p.position + (p.ranks.fantasypros_standard_position || "?")} className={"depth-position depth-position-" + p.position} style={{ width: p.radius + "px", height: p.radius + "px", border: ((25 - p.radius) / 2) + "px solid #fff"}}></span>)}
 					</span>
 				</div>
 			})}
