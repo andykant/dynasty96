@@ -148,6 +148,32 @@ export var Franchise = Reflux.createStore({
 	}
 });
 
+export var Rosters = Reflux.createStore({
+	listenables: Actions,
+	
+	init: function() {
+		this.rosters = null;
+		this.listenTo(Players, this.update);
+	},
+
+	getInitialState: function() {
+		return this.rosters;
+	},
+
+	onRosters: function(rosters) {
+		this.rosters = rosters;
+		this.trigger(this.rosters);
+	},
+
+	update: function() {
+		this.trigger(this.rosters);
+	},
+
+	byId: function(id) {
+		return this.rosters[id].map((playerId) => Players.byId(playerId));
+	}
+});
+
 export var Next = Reflux.createStore({
 	listenables: Actions,
 	

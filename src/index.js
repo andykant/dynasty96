@@ -73,14 +73,34 @@ gitRev.short((rev) => {
 			});
 		}
 
+		// Merge FantasyPros Ranks
+		if (data.fantasypros && data.players && ["fantasypros","players"].indexOf(type) > -1) {
+			var selector = /\<tr class="mpb-available.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td\>\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
+			data.fantasypros.replace(selector, (whole, rank, name, position, positionRank) => {
+				for (var i = 0; i < data.players.length; i++) {
+					if (position === data.players[i].position && name.replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
+						data.players[i].rank = parseInt(rank, 10);
+						data.players[i].positionRank = parseInt(positionRank, 10);
+					}
+				}
+			});
+		}
+
 		// Sort players
-		if (data.dlf && data.adp && data.players && ["adp","dlf","players"].indexOf(type) > -1) {
+		if (data.dlf && data.adp && data.fantasypros && data.players && ["adp","dlf","fantasypros","players"].indexOf(type) > -1) {
 			data.players = data.players.sort((a,b) => (a.adp || Infinity) - (b.adp || Infinity));
 		}
 
 		update();
 	};
 	mfl("league", (body) => body.league.franchises.franchise, load, !config.redirect && config.leagueRefreshRate);
+	mfl("rosters", (body) => {
+		var rosters = {};
+		body.rosters.franchise.forEach((f) => {
+			rosters[f.id] = f.player.map((p) => p.id);
+		});
+		return rosters;
+	}, load, !config.redirect && config.leagueRefreshRate);
 	mfl("adp", (body) => body.adp.player.map(
 		(player) => (player.averagePick = parseFloat(player.averagePick)*6) && player
 	), load);
@@ -91,6 +111,7 @@ gitRev.short((rev) => {
 		(pick) => { pick.timestamp = parseInt(pick.timestamp,10) || 0; return pick; }
 	), load, !config.redirect && config.refreshRate);
 	load("dlf", { dlf: fs.readFileSync(path.join(__dirname, "../data/dlf_adp.html"), "utf8") });
+	load("fantasypros", { fantasypros: fs.readFileSync(path.join(__dirname, "../data/fantasypros_ranks.html"), "utf8") });
 	var franchisejson = path.join(__dirname, "../data/franchise.json");
 	load("franchise", fs.existsSync(franchisejson) ? JSON.parse(fs.readFileSync(franchisejson)) : { franchise: {} });
 
@@ -116,6 +137,7 @@ gitRev.short((rev) => {
 				socket.emit("league", data.league);
 				socket.emit("players", data.players);
 				socket.emit("draftResults", data.draftResults);
+				socket.emit("rosters", data.rosters);
 
 				// Handle reconnections
 				socket.on("reconnect", () => {
@@ -173,6 +195,7 @@ gitRev.short((rev) => {
 			};
 		}));
 		app.get("/", (req, res) => res.send(file("index.html")));
+		app.get("/ranks", (req, res) => res.send(file("ranks.html")));
 
 		// Link webpack bundle
 		if (config.env === "development") {

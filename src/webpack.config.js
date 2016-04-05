@@ -7,12 +7,13 @@ var http = "http://"+config.host+":"+config.devPort;
 export default {
 	context: path.join(__dirname, "../src"),
 	devtool: "#eval-source-map",
-	entry: config.env === "development"
-		? ["webpack/hot/dev-server", "webpack-dev-server/client?" + http, "./client/index.js"]
-		: "./client/index.js",
+	entry: {
+		index: config.env === "development" ? ["webpack/hot/dev-server", "webpack-dev-server/client?" + http, "./client/index.js"] : "./client/index.js",
+		ranks: config.env === "development" ? ["webpack/hot/dev-server", "webpack-dev-server/client?" + http, "./client/ranks.js"] : "./client/ranks.js"
+	},
 	output: {
 		path: path.join(__dirname, "bundle"),
-		filename: "index.js",
+		filename: "[name].js",
 		publicPath: http + "/bundle/"
 	},
 	module: {
