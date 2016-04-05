@@ -21,14 +21,14 @@ export default React.createClass({
 			var depth = 0;
 			franchise.roster = rosters && Rosters.byId(franchise.id).sort((a, b) => {
 				if (a && b) {
-					return (a.rank || 300) - (b.rank || 300);
+					return (a.ranks.fantasypros_standard || 300) - (b.ranks.fantasypros_standard || 300);
 				}
 				return 0;
 			});
 			var lineup = { QB: [], RB: [], WR: [], TE: [], total: 0 };
 			franchise.roster && franchise.roster.forEach((p, index) => {
 				if (p) {
-					var rank = p.rank ? (300 - p.rank) : 0;
+					var rank = p.ranks.fantasypros_standard ? (300 - p.ranks.fantasypros_standard) : 0;
 
 					// Determine depth score
 					score += rank;
@@ -76,7 +76,7 @@ export default React.createClass({
 						<span className="depth-title-name">{franchise.name.replace(/\<.+?\>/g,"")}</span>
 					</span>
 					<span className="depth-players">
-					{franchise.roster && franchise.roster.map((p) => p && <span key={p.id} data-tip={p.name + " " + (p.rank || "?") + " " + p.position + (p.positionRank || "?")} className={"depth-position depth-position-" + p.position}></span>)}
+					{franchise.roster && franchise.roster.map((p) => p && <span key={p.id} data-tip={p.name + " " + (p.ranks.fantasypros_standard || "?") + " " + p.position + (p.ranks.fantasypros_standard_position || "?")} className={"depth-position depth-position-" + p.position}></span>)}
 					</span>
 				</div>
 			})}

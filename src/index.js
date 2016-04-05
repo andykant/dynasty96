@@ -38,12 +38,21 @@ gitRev.short((rev) => {
 	var load = (type, json) => {
 		data[type] = json[type];
 
+		var matchPlayer = (player, callback) => {
+			for (var i = 0; i < data.players.length; i++) {
+				if (player.position === data.players[i].position && player.name.split(" ").slice(0, 2).join(" ").replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
+					callback(data.players[i]);
+				}
+			}
+		};
+
 		// Adjust player names
 		if (data.players && type === "players") {
 			data.players.forEach((player) => {
 	      var comma = player.name.indexOf(", ");
 	      comma = comma > -1 ? comma : player.name.length;
 	      player.name = player.name.slice(comma + 2) + " " + player.name.slice(0, comma);
+	      player.ranks = {};
 	    });
 		}
 
@@ -61,30 +70,43 @@ gitRev.short((rev) => {
 		// Merge DLF ADP
 		if (data.dlf && data.players && ["dlf","players"].indexOf(type) > -1) {
 			data.dlf.forEach((player) => {
-				for (var i = 0; i < data.players.length; i++) {
-					if (player.position === data.players[i].position && player.name.split(" ").slice(0, 2).join(" ").replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
-						data.players[i].dlf_adp = Math.round(6*player.rank);
-						data.players[i].dlf_stddev = Math.round(6*player.stddev);
-						data.players[i].age = player.age;
-					}
-				}
+				matchPlayer(player, (p) => {
+					p.dlf_adp = Math.round(6*player.rank);
+					p.dlf_stddev = Math.round(6*player.stddev);
+					p.age = player.age;
+					p.ranks.dlf = player.rank;
+				});
 			});
 		}
 
 		// Merge FantasyPros Ranks
-		if (data.fantasypros && data.players && ["fantasypros","players"].indexOf(type) > -1) {
-			data.fantasypros.forEach((player) => {
-				for (var i = 0; i < data.players.length; i++) {
-					if (player.position === data.players[i].position && player.name.split(" ").slice(0, 2).join(" ").replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
-						data.players[i].rank = player.rank;
-						data.players[i].positionRank = player.positionRank;
-					}
-				}
+		if (data["fantasypros-standard"] && data.players && ["fantasypros-standard","players"].indexOf(type) > -1) {
+			data["fantasypros-standard"].forEach((player) => {
+				matchPlayer(player, (p) => {
+					p.ranks.fantasypros_standard = player.rank;
+					p.ranks.fantasypros_standard_position = player.positionRank;
+				});
+			});
+		}
+		if (data["fantasypros-ppr"] && data.players && ["fantasypros-ppr","players"].indexOf(type) > -1) {
+			data["fantasypros-ppr"].forEach((player) => {
+				matchPlayer(player, (p) => {
+					p.ranks.fantasypros_ppr = player.rank;
+					p.ranks.fantasypros_ppr_position = player.positionRank;
+				});
+			});
+		}
+		if (data["fantasypros-halfppr"] && data.players && ["fantasypros-halfppr","players"].indexOf(type) > -1) {
+			data["fantasypros-halfppr"].forEach((player) => {
+				matchPlayer(player, (p) => {
+					p.ranks.fantasypros_halfppr = player.rank;
+					p.ranks.fantasypros_halfppr_position = player.positionRank;
+				});
 			});
 		}
 
 		// Sort players
-		if (data.dlf && data.adp && data.fantasypros && data.players && ["adp","dlf","fantasypros","players"].indexOf(type) > -1) {
+		if (data.dlf && data.adp && data.fantasypros && data.players && ["adp","dlf","players"].indexOf(type) > -1) {
 			data.players = data.players.sort((a,b) => (a.adp || Infinity) - (b.adp || Infinity));
 		}
 
@@ -129,8 +151,38 @@ gitRev.short((rev) => {
 		});
 		return players;
 	}, load, !config.redirect && config.crawlRefreshRate);
-	crawl("fantasypros", {
+	crawl("fantasypros-standard", {
 		url: "http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php"
+	}, (body) => {
+		var players = [];
+		var selector = /\<tr class="mpb-available.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td\>\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
+		body.replace(selector, (whole, rank, name, position, positionRank) => {
+			players.push({
+				name: name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,""),
+				position: position,
+				rank: parseInt(rank, 10),
+				positionRank: parseFloat(positionRank, 10)
+			});
+		});
+		return players;
+	}, load, !config.redirect && config.crawlRefreshRate);
+	crawl("fantasypros-ppr", {
+		url: "http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php"
+	}, (body) => {
+		var players = [];
+		var selector = /\<tr class="mpb-available.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td\>\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
+		body.replace(selector, (whole, rank, name, position, positionRank) => {
+			players.push({
+				name: name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,""),
+				position: position,
+				rank: parseInt(rank, 10),
+				positionRank: parseFloat(positionRank, 10)
+			});
+		});
+		return players;
+	}, load, !config.redirect && config.crawlRefreshRate);
+	crawl("fantasypros-halfppr", {
+		url: "http://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php"
 	}, (body) => {
 		var players = [];
 		var selector = /\<tr class="mpb-available.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td\>\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;

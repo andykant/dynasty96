@@ -16,7 +16,6 @@ export default function get(type, options, parse, callback, refreshRate) {
 	}
 	else {
 		console.log("Loading Crawl: " + type + " (" + Date.now() + ")");
-		console.log(typeof options.url === "function" ? options.url() : options.url);
 		request.get(Object.assign({}, options, {
 			url: typeof options.url === "function" ? options.url() : options.url
 		}), (e, r, body) => {
