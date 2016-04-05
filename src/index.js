@@ -10,6 +10,7 @@ import WebpackDevServer from "webpack-dev-server";
 import config from "./config";
 import webpackConfig from "./webpack.config";
 import mfl from "./mfl";
+import crawl from "./crawl";
 
 process.env.NODE_ENV = config.env;
 
@@ -59,15 +60,12 @@ gitRev.short((rev) => {
 
 		// Merge DLF ADP
 		if (data.dlf && data.players && ["dlf","players"].indexOf(type) > -1) {
-			var adp = [],
-				selector = /\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td.*?style="font-size:10px;".*?\>[\n\r\s]*(.+?)[\n\r\s]*\<\/td\>[\n\r]+\<td .+?\>(.*?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>/gm;
-			data.dlf.replace(selector, (whole, position, name, age, rank, stddev) => {
-				name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,"");
+			data.dlf.forEach((player) => {
 				for (var i = 0; i < data.players.length; i++) {
-					if (position === data.players[i].position && name.replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
-						data.players[i].dlf_adp = Math.round(6*parseFloat(rank));
-						data.players[i].dlf_stddev = Math.round(6*parseFloat(stddev));
-						data.players[i].age = parseInt(age,10);
+					if (player.position === data.players[i].position && player.name.split(" ").slice(0, 2).join(" ").replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
+						data.players[i].dlf_adp = Math.round(6*player.rank);
+						data.players[i].dlf_stddev = Math.round(6*player.stddev);
+						data.players[i].age = player.age;
 					}
 				}
 			});
@@ -75,12 +73,11 @@ gitRev.short((rev) => {
 
 		// Merge FantasyPros Ranks
 		if (data.fantasypros && data.players && ["fantasypros","players"].indexOf(type) > -1) {
-			var selector = /\<tr class="mpb-available.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td\>\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
-			data.fantasypros.replace(selector, (whole, rank, name, position, positionRank) => {
+			data.fantasypros.forEach((player) => {
 				for (var i = 0; i < data.players.length; i++) {
-					if (position === data.players[i].position && name.replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
-						data.players[i].rank = parseInt(rank, 10);
-						data.players[i].positionRank = parseInt(positionRank, 10);
+					if (player.position === data.players[i].position && player.name.split(" ").slice(0, 2).join(" ").replace(/[. ,]/g,"").toLowerCase().match(new RegExp(data.players[i].name.replace(/[. ,]/g,"").toLowerCase()))) {
+						data.players[i].rank = player.rank;
+						data.players[i].positionRank = player.positionRank;
 					}
 				}
 			});
@@ -110,8 +107,43 @@ gitRev.short((rev) => {
 	mfl("draftResults", (body) => body.draftResults.draftUnit.draftPick.map(
 		(pick) => { pick.timestamp = parseInt(pick.timestamp,10) || 0; return pick; }
 	), load, !config.redirect && config.refreshRate);
-	load("dlf", { dlf: fs.readFileSync(path.join(__dirname, "../data/dlf_adp.html"), "utf8") });
-	load("fantasypros", { fantasypros: fs.readFileSync(path.join(__dirname, "../data/fantasypros_ranks.html"), "utf8") });
+	crawl("dlf", {
+		url: () => {
+			var now = new Date();
+			return "http://dynastyleaguefootball.com/DLF-includes/ADP/ADP2overall.php?month=" + (now.getMonth()+1-1 /* april not available */) + "&year=" + now.getFullYear();
+		},
+		headers: {
+			"Cookie": "amember_ru=" + config.dlf_username + "; amember_rp=" + config.dlf_password
+		}
+	}, (body) => {
+		var players = [];
+		var selector = /\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td.*?style="font-size:10px;".*?\>[\n\r\s]*(.+?)[\n\r\s]*\<\/td\>[\n\r]+\<td .+?\>(.*?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>/gm;
+		body.replace(selector, (whole, position, name, age, rank, stddev) => {
+			players.push({
+				name: name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,""),
+				position: position,
+				age: parseInt(age, 10),
+				rank: parseFloat(rank),
+				stddev: parseFloat(stddev)
+			});
+		});
+		return players;
+	}, load, !config.redirect && config.crawlRefreshRate);
+	crawl("fantasypros", {
+		url: "http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php"
+	}, (body) => {
+		var players = [];
+		var selector = /\<tr class="mpb-available.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td\>\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
+		body.replace(selector, (whole, rank, name, position, positionRank) => {
+			players.push({
+				name: name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,""),
+				position: position,
+				rank: parseInt(rank, 10),
+				positionRank: parseFloat(positionRank, 10)
+			});
+		});
+		return players;
+	}, load, !config.redirect && config.crawlRefreshRate);
 	var franchisejson = path.join(__dirname, "../data/franchise.json");
 	load("franchise", fs.existsSync(franchisejson) ? JSON.parse(fs.readFileSync(franchisejson)) : { franchise: {} });
 

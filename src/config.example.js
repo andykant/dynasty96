@@ -17,8 +17,14 @@ export default {
 	refreshRate: 10 * 60 * 1000,
 	// MFL league refresh rate
 	leagueRefreshRate: 1000 * 60 * 60 * 24,
+	// Crawl refresh rate
+	crawlRefreshRate: 1000 * 60 * 60 * 24,
 	// Socket.IO transports
 	transports: ["websocket", "polling"],
 	// Whether to redirect to another website
-	redirect: "http://path.to/host"
+	redirect: "http://path.to/host",
+	// DLF username
+	dlf_username: null,
+	// DLF password hash (from a cookie)
+	dlf_password: null
 };
