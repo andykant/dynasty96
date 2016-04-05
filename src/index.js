@@ -4,6 +4,7 @@ import feathers from "feathers";
 import socketio from "feathers-socketio";
 import httpProxy from "http-proxy";
 import request from "request";
+import requestSync from "request-sync";
 import webpack from "webpack";
 import gitRev from "git-rev";
 import WebpackDevServer from "webpack-dev-server";
@@ -131,8 +132,13 @@ gitRev.short((rev) => {
 	), load, !config.redirect && config.refreshRate);
 	crawl("dlf", {
 		url: () => {
-			var now = new Date();
-			return "http://dynastyleaguefootball.com/DLF-includes/ADP/ADP2overall.php?month=" + (now.getMonth()+1-1 /* april not available */) + "&year=" + now.getFullYear();
+			var month, year;
+			var { body } = requestSync("http://dynastyleaguefootball.com/rankings/dynasty-100");
+			body.replace(/\<a href="(http:\/\/dynastyleaguefootball\.com\/adpdata\/2016-adp\/\?month=(\d+)&year=(\d+))">[A-Z]+\<\/a\>/gm, (whole, href, m, y) => {
+				month = m;
+				year = y;
+			});
+			return "http://dynastyleaguefootball.com/DLF-includes/ADP/ADP2overall.php?month=" + month + "&year=" + year;
 		},
 		headers: {
 			"Cookie": "amember_ru=" + config.dlf_username + "; amember_rp=" + config.dlf_password
