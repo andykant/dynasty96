@@ -132,8 +132,8 @@ export default React.createClass({
 				var wins = 0;
 				schedules[franchise.id].forEach((id) => {
 					var opponent = league.filter(f => f.id === id)[0].score;
-					if (franchise.score > opponent) wins += 1;
-					else if (franchise.score === opponent) wins += 0.5;
+					if (franchise.score > opponent * 1.1) wins += 1;
+					else if (franchise.score > opponent * 0.9) wins += 0.5;
 				});
 				franchise.record = wins;
 			});
