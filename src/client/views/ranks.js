@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import Reflux from "reflux";
 import Tooltip from "react-tooltip";
 import LinkedStateMixin from "react-addons-linked-state-mixin";
-import { League, Rosters, Franchise } from "../stores";
+import { League, Rosters, Franchise, Schedules } from "../stores";
 
 var DEPTH = {
 	starters: 7,
@@ -17,6 +17,7 @@ export default React.createClass({
 		Reflux.connect(League, "league"),
 		Reflux.connect(Franchise, "franchise"),
 		Reflux.connect(Rosters, "rosters"),
+		Reflux.connect(Schedules, "schedules"),
 		LinkedStateMixin
 	],
 
@@ -28,9 +29,12 @@ export default React.createClass({
 	},
 
 	render: function() {
-		var { league, rosters, field, depth } = this.state;
+		var { league, rosters, field, depth, schedules } = this.state;
 		var id = this.state.franchise && this.state.franchise.id;
 		var max = DEPTH[depth];
+		var sos = field === "sos";
+		var record = field === "record";
+		field = sos || record ? "dynasty96" : field;
 
 		// Generate scores
 		league = league && league.slice(0).map((franchise) => {
@@ -109,6 +113,36 @@ export default React.createClass({
 			return 0;
 		});
 
+		if (sos && league && schedules) {
+			league.forEach((franchise) => {
+				var score = 0;
+				schedules[franchise.id].forEach((id) => {
+					score += 96 - league.indexOf(league.filter(f => f.id === id)[0]);
+				});
+				franchise.sos = score;
+			});
+			league = league.map((franchise) => {
+				franchise.score = franchise.sos;
+				return franchise;
+			}).sort((a,b) => b.score - a.score);
+		}
+
+		if (record && league && schedules) {
+			league.forEach((franchise) => {
+				var wins = 0;
+				schedules[franchise.id].forEach((id) => {
+					var opponent = league.filter(f => f.id === id)[0].score;
+					if (franchise.score > opponent) wins += 1;
+					else if (franchise.score === opponent) wins += 0.5;
+				});
+				franchise.record = wins;
+			});
+			league = league.map((franchise) => {
+				franchise.score = franchise.record;
+				return franchise;
+			}).sort((a,b) => b.score - a.score);
+		}
+
 		return <div className="ranks">
 			<div className="depth-legend">
 				<span className="depth-position depth-position-QB"></span>QB
@@ -127,6 +161,8 @@ export default React.createClass({
 					<option value="fantasypros_halfppr">FantasyPros 2016 Half-PPR</option>
 					<option value="fantasypros_ppr">FantasyPros 2016 PPR</option>
 					<option value="dlf">Dynasty League Football (DLF)</option>
+					<option value="sos">Strength of Schedule</option>
+					<option value="record">Projected Wins</option>
 				</select></label>
 			</div>
 
