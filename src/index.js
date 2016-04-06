@@ -70,12 +70,14 @@ gitRev.short((rev) => {
 
 		// Merge DLF ADP
 		if (data.dlf && data.players && ["dlf","players"].indexOf(type) > -1) {
+			var positions = { QB: 0, RB: 0, WR: 0, TE: 0 };
 			data.dlf.forEach((player) => {
 				matchPlayer(player, (p) => {
 					p.dlf_adp = Math.round(6*player.rank);
 					p.dlf_stddev = Math.round(6*player.stddev);
 					p.age = player.age;
-					p.ranks.dlf = player.rank;
+					p.ranks.dlf = Math.round(player.rank * 100) / 100;
+					p.ranks.dlf_position = ++positions[p.position];
 				});
 			});
 		}
@@ -103,6 +105,23 @@ gitRev.short((rev) => {
 					p.ranks.fantasypros_halfppr = player.rank;
 					p.ranks.fantasypros_halfppr_position = player.positionRank;
 				});
+			});
+		}
+
+		// Generate Dynasty96 ranking
+		if (data["fantasypros-standard"] && data["fantasypros-halfppr"] && data["fantasypros-ppr"] && data.players && ["fantasypros-standard","fantasypros-halfppr","fantasypros-ppr","players"].indexOf(type) > -1) {
+			var ranks = [];
+			data.players.forEach((player) => {
+				ranks.push({
+					player: player,
+					rank: Math.round(100 * ((player.ranks.fantasypros_standard || 300) + (player.ranks.fantasypros_ppr || 300) + (player.ranks.fantasypros_halfppr || 300)) / 3 * (player.position === "QB" ? 0.9 : 1)) / 100
+				});
+			});
+			ranks = ranks.sort((a, b) => a.rank - b.rank);
+			var positions = { QB: 0, RB: 0, WR: 0, TE: 0 };
+			ranks.forEach((rank, index) => {
+				rank.player.ranks.dynasty96 = Math.min(300, index + 1);
+				rank.player.ranks.dynasty96_position = ++positions[rank.player.position];
 			});
 		}
 
