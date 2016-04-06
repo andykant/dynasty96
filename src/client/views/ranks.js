@@ -59,6 +59,20 @@ export default React.createClass({
 				}
 			});
 
+			// Restrict to 1 QB in the starting lineup!
+			var QBs = franchise.roster && franchise.roster.filter(p => p && p.position === "QB");
+			var moveQBs = [];
+			QBs && QBs.slice(1).forEach((player) => {
+				var qbIndex = franchise.roster.indexOf(player);
+				if (qbIndex < 7) {
+					franchise.roster.splice(qbIndex, 1);
+					moveQBs.push(player);
+				}
+			});
+			if (moveQBs.length > 0) {
+				franchise.roster.splice.apply(franchise.roster, [7,0].concat(moveQBs));
+			}
+
 			var lineup = { QB: [], RB: [], WR: [], TE: [], total: 0 };
 			franchise.roster && franchise.roster.forEach((p, index) => {
 				if (p) {
