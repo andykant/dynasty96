@@ -34,7 +34,7 @@ gitRev.short((rev) => {
 		
 	// Load MFL data
 	var data = {};
-	var update = function() {};
+	var update = function(type) {};
 	var timestamp = () => Math.floor(Date.now() / 1000);
 	var load = (type, json) => {
 		data[type] = json[type];
@@ -108,6 +108,25 @@ gitRev.short((rev) => {
 			});
 		}
 
+		// Generate Dynasty96 startup
+		if (data.draftResults && data.players && ["draftResults","players"].indexOf(type) > -1) {
+			var players = {};
+			data.draftResults.forEach((result) => {
+				players[result.player] = players[result.player] || 0;
+				players[result.player] += 96 * 20 - (parseInt(result.round, 10) - 1) * 96 - parseInt(result.pick, 10);
+			});
+			var ranks = [];
+			var positions = { QB: 0, RB: 0, WR: 0, TE: 0 };
+			Object.keys(players).map((id) => [id, players[id]]).sort((a,b) => b[1] - a[1]).forEach((rank, index) => {
+				for (var i = 0; i < data.players.length; i++) {
+					if (data.players[i].id === rank[0]) {
+						data.players[i].ranks.startup = 1 + index;
+						data.players[i].ranks.startup_position = ++positions[data.players[i].position];
+					}
+				}
+			});
+		}
+
 		// Generate Dynasty96 ranking
 		if (data["fantasypros-standard"] && data["fantasypros-halfppr"] && data["fantasypros-ppr"] && data.players && ["fantasypros-standard","fantasypros-halfppr","fantasypros-ppr","players"].indexOf(type) > -1) {
 			var ranks = [];
@@ -123,6 +142,8 @@ gitRev.short((rev) => {
 				rank.player.ranks.dynasty96 = Math.min(300, index + 1);
 				rank.player.ranks.dynasty96_position = ++positions[rank.player.position];
 			});
+
+			update("players");
 		}
 
 		// Sort players
@@ -130,7 +151,7 @@ gitRev.short((rev) => {
 			data.players = data.players.sort((a,b) => (a.adp || Infinity) - (b.adp || Infinity));
 		}
 
-		update();
+		update(type);
 	};
 	mfl("league", (body) => body.league.franchises.franchise, load, !config.redirect && config.leagueRefreshRate);
 	mfl("rosters", (body) => {
@@ -262,7 +283,7 @@ gitRev.short((rev) => {
 				socket.emit("players", data.players);
 				socket.emit("draftResults", data.draftResults);
 				socket.emit("rosters", data.rosters);
-				socket.emit("schedules", data.weeklyResults);
+				socket.emit("weeklyResults", data.weeklyResults);
 
 				// Handle reconnections
 				socket.on("reconnect", () => {
@@ -296,7 +317,14 @@ gitRev.short((rev) => {
 			});
 
 			// Push deltas on update
-			update = () => sockets.forEach((socket) => send_deltas(socket));
+			update = (type) => {
+				if (type === "draftResults") {
+					sockets.forEach((socket) => send_deltas(socket));
+				}
+				else if (["league","players","rosters","weeklyResults"].indexOf(type) > -1) {
+					sockets.forEach((socket) => socket.emit("players", data.players));
+				}
+			}
 
 			// Send delta picks
 			function send_deltas(socket) {

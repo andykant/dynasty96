@@ -167,6 +167,7 @@ export default React.createClass({
 					<option value="fantasypros_halfppr">FantasyPros 2016 Half-PPR</option>
 					<option value="fantasypros_ppr">FantasyPros 2016 PPR</option>
 					<option value="dlf">Dynasty League Football (DLF)</option>
+					<option value="startup">Dynasty96 Startup</option>
 					<option value="sos">Strength of Schedule</option>
 					<option value="record">Projected Wins</option>
 				</select></label>
