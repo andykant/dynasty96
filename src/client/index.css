@@ -430,8 +430,8 @@ label:hover {
 	width: 600px;
 }
 
-#ranks .depth-legend {
-	margin-left: 100px;
+#ranks .depth-legend label {
+	float: right;
 }
 
 #ranks .depth-title, #ranks .depth-players {
