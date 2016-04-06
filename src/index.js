@@ -322,7 +322,7 @@ gitRev.short((rev) => {
 					sockets.forEach((socket) => send_deltas(socket));
 				}
 				else if (["league","players","rosters","weeklyResults"].indexOf(type) > -1) {
-					sockets.forEach((socket) => socket.emit("players", data.players));
+					sockets.forEach((socket) => socket.emit(type, data[type]));
 				}
 			}
 
