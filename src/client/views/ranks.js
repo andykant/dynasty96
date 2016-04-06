@@ -2,17 +2,25 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Reflux from "reflux";
 import Tooltip from "react-tooltip";
+import LinkedStateMixin from "react-addons-linked-state-mixin";
 import { League, Rosters, Franchise } from "../stores";
 
 export default React.createClass({
 	mixins: [
 		Reflux.connect(League, "league"),
 		Reflux.connect(Franchise, "franchise"),
-		Reflux.connect(Rosters, "rosters")
+		Reflux.connect(Rosters, "rosters"),
+		LinkedStateMixin
 	],
 
+	getInitialState: function() {
+		return {
+			field: "fantasypros_standard"
+		};
+	},
+
 	render: function() {
-		var { league, rosters } = this.state;
+		var { league, rosters, field } = this.state;
 		var id = this.state.franchise && this.state.franchise.id;
 
 		// Generate scores
@@ -21,14 +29,14 @@ export default React.createClass({
 			var depth = 0;
 			franchise.roster = rosters && Rosters.byId(franchise.id).sort((a, b) => {
 				if (a && b) {
-					return (a.ranks.fantasypros_standard || 300) - (b.ranks.fantasypros_standard || 300);
+					return (a.ranks[field] || 300) - (b.ranks[field] || 300);
 				}
 				return 0;
 			});
 			var lineup = { QB: [], RB: [], WR: [], TE: [], total: 0 };
 			franchise.roster && franchise.roster.forEach((p, index) => {
 				if (p) {
-					var rank = p.ranks.fantasypros_standard ? (300 - p.ranks.fantasypros_standard) : 0;
+					var rank = Math.round(p.ranks[field] ? (300 - p.ranks[field]) : 0);
 					p.radius = 13 + Math.log(Math.max(1, rank - 100)) / Math.log(1.7)
 
 					// Determine depth score
@@ -66,6 +74,12 @@ export default React.createClass({
 				<span className="depth-position depth-position-RB"></span>RB
 				<span className="depth-position depth-position-WR"></span>WR
 				<span className="depth-position depth-position-TE"></span>TE
+				<label>Ranking: <select valueLink={this.linkState("field")}>
+					<option value="dlf">Dynasty League Football (DLF)</option>
+					<option value="fantasypros_standard">FantasyPros 2016 Standard</option>
+					<option value="fantasypros_halfppr">FantasyPros 2016 Half-PPR</option>
+					<option value="fantasypros_ppr">FantasyPros 2016 PPR</option>
+				</select></label>
 			</div>
 
 			{league && league.map((franchise, index) => {
@@ -78,7 +92,7 @@ export default React.createClass({
 						<span className="depth-title-name">{franchise.name.replace(/\<.+?\>/g,"")}</span>
 					</span>
 					<span className="depth-players">
-					{franchise.roster && franchise.roster.map((p) => p && <span key={p.id} data-tip={p.name + " " + (p.ranks.fantasypros_standard || "?") + " " + p.position + (p.ranks.fantasypros_standard_position || "?")} className={"depth-position depth-position-" + p.position} style={{ width: p.radius + "px", height: p.radius + "px", border: ((25 - p.radius) / 2) + "px solid #fff"}}></span>)}
+					{franchise.roster && franchise.roster.map((p) => p && <span key={p.id} data-tip={p.name + " " + (p.ranks[field] || "?") + " " + p.position + (p.ranks[field + "_position"] || "?")} className={"depth-position depth-position-" + p.position} style={{ width: p.radius + "px", height: p.radius + "px", border: ((25 - p.radius) / 2) + "px solid #fff"}}></span>)}
 					</span>
 				</div>
 			})}

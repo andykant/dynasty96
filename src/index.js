@@ -4,7 +4,7 @@ import feathers from "feathers";
 import socketio from "feathers-socketio";
 import httpProxy from "http-proxy";
 import request from "request";
-import requestSync from "request-sync";
+import requestSync from "sync-request";
 import webpack from "webpack";
 import gitRev from "git-rev";
 import WebpackDevServer from "webpack-dev-server";
@@ -133,7 +133,7 @@ gitRev.short((rev) => {
 	crawl("dlf", {
 		url: () => {
 			var month, year;
-			var { body } = requestSync("http://dynastyleaguefootball.com/rankings/dynasty-100");
+			var body = requestSync("GET", "http://dynastyleaguefootball.com/rankings/dynasty-100").getBody("utf-8");
 			body.replace(/\<a href="(http:\/\/dynastyleaguefootball\.com\/adpdata\/2016-adp\/\?month=(\d+)&year=(\d+))">[A-Z]+\<\/a\>/gm, (whole, href, m, y) => {
 				month = m;
 				year = y;
