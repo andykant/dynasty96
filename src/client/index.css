@@ -447,6 +447,10 @@ label:hover {
 	box-sizing: content-box;
 	margin: 0;
 }
+#ranks .depth-players .depth-position {
+	border-style: solid;
+	border-color: #fff;
+}
 
 .ranks-rank {
 	height: 51px;
@@ -474,4 +478,20 @@ label:hover {
 	line-height: 51px;
 	float: left;
 	text-align: center;
+}
+
+#ranks .depth-team-mine {
+	background: #f0cf43;
+	border-radius: 100px;
+	padding: 5px 20px;
+	margin: 0 -20px;
+	width: 640px;
+}
+
+#ranks .depth-team-mine .depth-players .depth-position {
+	border-color: #f0cf43;
+}
+
+#ranks .depth-team-mine .ranks-rank-index {
+	color: #999;
 }

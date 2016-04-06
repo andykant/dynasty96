@@ -76,7 +76,7 @@ gitRev.short((rev) => {
 					p.dlf_adp = Math.round(6*player.rank);
 					p.dlf_stddev = Math.round(6*player.stddev);
 					p.age = player.age;
-					p.ranks.dlf = Math.round(player.rank * 100) / 100;
+					p.ranks.dlf = player.overall;
 					p.ranks.dlf_position = ++positions[p.position];
 				});
 			});
@@ -164,14 +164,15 @@ gitRev.short((rev) => {
 		}
 	}, (body) => {
 		var players = [];
-		var selector = /\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td.*?style="font-size:10px;".*?\>[\n\r\s]*(.+?)[\n\r\s]*\<\/td\>[\n\r]+\<td .+?\>(.*?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>/gm;
-		body.replace(selector, (whole, position, name, age, rank, stddev) => {
+		var selector = /\<td .+?\>(.+?)\<\/td\>[\n\r]*\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td.*?style="font-size:10px;".*?\>[\n\r\s]*(.+?)[\n\r\s]*\<\/td\>[\n\r]+\<td .+?\>(.*?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>/gm;
+		body.replace(selector, (whole, overall, position, name, age, rank, stddev) => {
 			players.push({
 				name: name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,""),
 				position: position,
 				age: parseInt(age, 10),
 				rank: parseFloat(rank),
-				stddev: parseFloat(stddev)
+				stddev: parseFloat(stddev),
+				overall: parseInt(overall, 10)
 			});
 		});
 		return players;
