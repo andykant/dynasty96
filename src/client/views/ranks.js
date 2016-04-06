@@ -42,7 +42,7 @@ export default React.createClass({
 			});
 
 			// Force 1 of each position into the starting lineup
-			["TE","WR","RB","QB"].forEach((position, i) => {
+			franchise.roster && ["TE","WR","RB","QB"].forEach((position, i) => {
 				var first = franchise.roster.filter(p => p && p.position === position)[0];
 				if (first) {
 					franchise.roster.splice(franchise.roster.indexOf(first), 1);

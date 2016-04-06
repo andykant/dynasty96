@@ -114,7 +114,7 @@ gitRev.short((rev) => {
 			data.players.forEach((player) => {
 				ranks.push({
 					player: player,
-					rank: Math.round(100 * ((player.ranks.fantasypros_standard || 300) + (player.ranks.fantasypros_ppr || 300) + (player.ranks.fantasypros_halfppr || 300)) / 3 * (player.position === "QB" ? 0.9 : 1)) / 100
+					rank: Math.round(100 * ((player.ranks.fantasypros_standard || 300) + (player.ranks.fantasypros_ppr || 300)) / 2 * (player.position === "QB" ? 0.9 : 1)) / 100
 				});
 			});
 			ranks = ranks.sort((a, b) => a.rank - b.rank);
