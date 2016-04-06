@@ -20,8 +20,8 @@ export default function get(type, parse, callback, refreshRate, forceParse) {
 			url: "http://football.myfantasyleague.com/" + config.year + "/export?TYPE=" + type + "&JSON=1&FRANCHISES=16&W=YTD&L=" + config.league, 
 			json: true
 		}, (e, r, body) => {
-			if (body[type] || (forceParse && body)) {
-				var data = { [type]: parse(body) };
+			if ((body[type] || (forceParse && body)) && (body = parse(body))) {
+				var data = { [type]: body };
 				fs.writeFileSync(json, JSON.stringify(data, null, 2));
 				callback(type, data);
 			}
