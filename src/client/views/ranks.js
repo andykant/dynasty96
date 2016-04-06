@@ -12,6 +12,11 @@ var DEPTH = {
 	total: 20
 };
 
+function tier(positionRank) { 
+	if (positionRank / 16 <= 6 / 16) return "★";
+	else return Math.floor(positionRank / 16) + 1;
+};
+
 export default React.createClass({
 	mixins: [
 		Reflux.connect(League, "league"),
@@ -82,6 +87,7 @@ export default React.createClass({
 				if (p) {
 					var rank = Math.round(p.ranks[field] ? (300 - p.ranks[field]) : 0);
 					p.radius = Math.round(13 + Math.log(Math.max(1, rank - 100)) / Math.log(1.7));
+					p.radius += p.radius % 2;
 
 					// Determine lineup score
 					lineup[p.position].push(rank);
@@ -170,13 +176,13 @@ export default React.createClass({
 				return <div className={"depth-team" + (id === franchise.id ? " depth-team-mine" : "")} key={franchise.id}>
 					<span className="ranks-rank">
 						<span className="ranks-rank-index">{1 + index}</span>
-						<span className="ranks-rank-score">{franchise.score}</span>
+ 						<span className="ranks-rank-score">{franchise.score}</span>
 					</span>
 					<span className="depth-title">
 						<span className="depth-title-name">{franchise.name.replace(/\<.+?\>/g,"")}</span>
 					</span>
 					<span className="depth-players">
-					{franchise.roster && franchise.roster.map((p, i) => p && <span key={p.id} data-tip={p.name + " #" + (p.ranks[field] || "?") + " " + p.position + (p.ranks[field + "_position"] || "?")} className={"depth-position depth-position-" + p.position + ((1+i) > max || p.name === "N/A" ? " depth-position-fade" : "")} style={{ width: p.radius + "px", height: p.radius + "px", borderWidth: ((25 - p.radius) / 2) + "px"}}></span>)}
+					{franchise.roster && franchise.roster.map((p, i) => p && <span key={p.id} data-tip={p.name + " #" + (p.ranks[field] || "?") + " " + p.position + (p.ranks[field + "_position"] || "?")} className={"depth-position depth-position-" + p.position + ((1+i) > max || p.name === "N/A" ? " depth-position-fade" : "")} style={{ width: p.radius + "px", height: p.radius + "px", borderWidth: ((24 - p.radius) / 2) + "px"}}><span className={"rank-tier" + (tier(p.ranks[field + "_position"]) === "★" ? " rank-tier-elite" : "")} style={{ width: (1 + p.radius) + "px", lineHeight: (2 + p.radius) + "px"}}>{tier(p.ranks[field + "_position"])}</span></span>)}
 					</span>
 				</div>
 			})}

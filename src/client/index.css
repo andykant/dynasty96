@@ -450,6 +450,8 @@ label:hover {
 #ranks .depth-players .depth-position {
 	border-style: solid;
 	border-color: #fff;
+	position: relative;
+	margin-right: 1px;
 }
 
 .ranks-rank {
@@ -494,4 +496,15 @@ label:hover {
 
 #ranks .depth-team-mine .ranks-rank-index {
 	color: #999;
+}
+
+#ranks .rank-tier {
+	position: absolute;
+	text-align: center;
+	color: rgba(255,255,255,0.75);
+	font-size: 80%;
+}
+
+#ranks .rank-tier-elite {
+	color: #f0cf43;
 }
