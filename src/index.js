@@ -146,6 +146,20 @@ gitRev.short((rev) => {
 	mfl("players", (body) => body.players.player.filter(
 		(player) => config.positions.indexOf(player.position) > -1
 	), load);
+	mfl("weeklyResults", (body) => {
+		var schedules = {};
+		body.allWeeklyResults.weeklyResults.forEach((week) => {
+			week.matchup && week.matchup.forEach((matchup) => {
+				var a = matchup.franchise[0].id;
+				var b = matchup.franchise[1].id;
+				schedules[a] = schedules[a] || [];
+				schedules[b] = schedules[b] || [];
+				schedules[a].push(b);
+				schedules[b].push(a);
+			});
+		});
+		return schedules;
+	}, load, !config.redirect && config.leagueRefreshRate, true);
 	mfl("draftResults", (body) => body.draftResults.draftUnit.draftPick.map(
 		(pick) => { pick.timestamp = parseInt(pick.timestamp,10) || 0; return pick; }
 	), load, !config.redirect && config.refreshRate);
@@ -248,6 +262,7 @@ gitRev.short((rev) => {
 				socket.emit("players", data.players);
 				socket.emit("draftResults", data.draftResults);
 				socket.emit("rosters", data.rosters);
+				socket.emit("schedules", data.weeklyResults);
 
 				// Handle reconnections
 				socket.on("reconnect", () => {

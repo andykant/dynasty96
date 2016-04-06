@@ -8,5 +8,6 @@ export default Reflux.createActions([
 	"players",
 	"sort",
 	"draftResults",
-	"deltas"
+	"deltas",
+	"schedules"
 ]);

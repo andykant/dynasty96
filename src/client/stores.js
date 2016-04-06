@@ -174,6 +174,32 @@ export var Rosters = Reflux.createStore({
 	}
 });
 
+export var Schedules = Reflux.createStore({
+	listenables: Actions,
+	
+	init: function() {
+		this.schedules = null;
+		this.listenTo(Players, this.update);
+	},
+
+	getInitialState: function() {
+		return this.schedules;
+	},
+
+	onSchedules: function(schedules) {
+		this.schedules = schedules;
+		this.trigger(this.schedules);
+	},
+
+	update: function() {
+		this.trigger(this.schedules);
+	},
+
+	byId: function(id) {
+		return this.schedules[id];
+	}
+});
+
 export var Next = Reflux.createStore({
 	listenables: Actions,
 	

@@ -5,7 +5,7 @@ import config from "./config";
 
 var timeouts = {};
 
-export default function get(type, parse, callback, refreshRate) {
+export default function get(type, parse, callback, refreshRate, forceParse) {
 	// Load the data, requesting it as necessary
 	var json = path.join(__dirname, "../data/" + type + ".json");
 
@@ -17,10 +17,10 @@ export default function get(type, parse, callback, refreshRate) {
 	else {
 		console.log("Loading MFL API: " + type + " (" + Date.now() + ")");
 		request.get({
-			url: "http://football.myfantasyleague.com/" + config.year + "/export?TYPE=" + type + "&JSON=1&FRANCHISES=16&L=" + config.league, 
+			url: "http://football.myfantasyleague.com/" + config.year + "/export?TYPE=" + type + "&JSON=1&FRANCHISES=16&W=YTD&L=" + config.league, 
 			json: true
 		}, (e, r, body) => {
-			if (body[type]) {
+			if (body[type] || (forceParse && body)) {
 				var data = { [type]: parse(body) };
 				fs.writeFileSync(json, JSON.stringify(data, null, 2));
 				callback(type, data);
