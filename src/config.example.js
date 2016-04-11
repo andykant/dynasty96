@@ -13,6 +13,8 @@ export default {
 	year: 2016,
 	// MFL Positions
 	positions: ["QB","RB","WR","TE"],
+	// MFL Starters
+	starters: { QB: 1, RB: 1, WR: 1, TE: 1, FLEX: 3 },
 	// MFL draft result refresh rate
 	refreshRate: 10 * 60 * 1000,
 	// MFL league refresh rate
@@ -26,5 +28,9 @@ export default {
 	// DLF username
 	dlf_username: null,
 	// DLF password hash (from a cookie)
-	dlf_password: null
+	dlf_password: null,
+	// Default ranking
+	ranking: "fantasypros_halfppr",
+	// Number of teams
+	teams: 16
 };

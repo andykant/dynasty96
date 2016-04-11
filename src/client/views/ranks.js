@@ -4,17 +4,21 @@ import Reflux from "reflux";
 import Tooltip from "react-tooltip";
 import LinkedStateMixin from "react-addons-linked-state-mixin";
 import { League, Rosters, Franchise, Schedules } from "../stores";
+import config from "../../config";
+
+var STARTERS_COUNT = 0;
+Object.keys(config.starters).forEach(position => STARTERS_COUNT += config.starters[position]);
 
 var DEPTH = {
-	starters: 7,
-	ten: 10,
-	twelve: 12,
+	starters: STARTERS_COUNT,
+	plus3: STARTERS_COUNT + 3,
+	plus5: STARTERS_COUNT + 5,
 	total: 20
 };
 
 function tier(positionRank) { 
-	if (positionRank / 16 <= 6 / 16) return "★";
-	else return Math.floor(positionRank / 16) + 1;
+	if (positionRank / config.teams <= 6 / config.teams) return "★";
+	else return Math.floor(positionRank / config.teams) + 1;
 };
 
 export default React.createClass({
@@ -28,7 +32,7 @@ export default React.createClass({
 
 	getInitialState: function() {
 		return {
-			field: "dynasty96",
+			field: config.ranking || "dynasty96",
 			depth: "starters"
 		};
 	},
@@ -39,7 +43,7 @@ export default React.createClass({
 		var max = DEPTH[depth];
 		var sos = field === "sos";
 		var record = field === "record";
-		field = sos || record ? "dynasty96" : field;
+		field = sos || record ? config.ranking || "dynasty96" : field;
 
 		// Generate scores
 		league = league && league.slice(0).map((franchise) => {
@@ -50,15 +54,31 @@ export default React.createClass({
 				return 0;
 			});
 
-			// Force 1 of each position into the starting lineup
-			franchise.roster && ["TE","WR","RB","QB"].forEach((position, i) => {
-				var first = franchise.roster.filter(p => p && p.position === position)[0];
-				if (first) {
-					franchise.roster.splice(franchise.roster.indexOf(first), 1);
-					franchise.roster.unshift(first);
+			// Add player strength radius
+			franchise.roster && franchise.roster.map(p => {
+				if (p) {
+					var rank = Math.round(p.ranks[field] ? (300 - p.ranks[field]) : 0);
+					p.radius = Math.round(13 + Math.log(Math.max(1, rank - 100)) / Math.log(1.7));
+					p.radius += p.radius % 2;
+					p.score = rank;
 				}
-				else {
-					franchise.roster.unshift({
+			});
+
+			// Determine base starters
+			var score = 0,
+				count = 0,
+				remaining = (franchise.roster && franchise.roster.slice(0)) || [],
+				roster = [];
+			config.positions.concat(["FLEX"]).forEach(position => {
+				for (var i = 0; i < config.starters[position]; i++) {
+					var player = remaining.filter(p => p && (position === "FLEX" ? ["RB","WR","TE"].indexOf(p.position) > -1 : p.position === position))[0];
+					if (player) {
+						remaining.splice(remaining.indexOf(player), 1);
+					}
+
+					score += player ? player.score : 0;
+					count++;
+					roster.push(player || {
 						name: "N/A",
 						position: position,
 						ranks: {
@@ -68,44 +88,8 @@ export default React.createClass({
 				}
 			});
 
-			// Restrict to 1 QB in the starting lineup!
-			var QBs = franchise.roster && franchise.roster.filter(p => p && p.position === "QB");
-			var moveQBs = [];
-			QBs && QBs.slice(1).forEach((player) => {
-				var qbIndex = franchise.roster.indexOf(player);
-				if (qbIndex < 7) {
-					franchise.roster.splice(qbIndex, 1);
-					moveQBs.push(player);
-				}
-			});
-			if (moveQBs.length > 0) {
-				franchise.roster.splice.apply(franchise.roster, [7,0].concat(moveQBs));
-			}
-
-			var lineup = { QB: [], RB: [], WR: [], TE: [], total: 0 };
-			franchise.roster && franchise.roster.forEach((p, index) => {
-				if (p) {
-					var rank = Math.round(p.ranks[field] ? (300 - p.ranks[field]) : 0);
-					p.radius = Math.round(13 + Math.log(Math.max(1, rank - 100)) / Math.log(1.7));
-					p.radius += p.radius % 2;
-
-					// Determine lineup score
-					lineup[p.position].push(rank);
-				}
-			});
-
-			// Determine base starters
-			var score = (lineup.QB[0] || 0) + (lineup.RB[0] || 0) + (lineup.WR[0] || 0) + (lineup.TE[0] || 0);
-			var count = (lineup.QB.length && 1) + (lineup.RB.length && 1) + (lineup.WR.length && 1) + (lineup.TE.length && 1);
-
-			// Determine top flex
-			var allFlex = lineup.RB.slice(1).concat(lineup.WR.slice(1), lineup.TE.slice(1)).sort((a, b) => b - a);
-			var topFlex = allFlex.slice(0, 3);
-			allFlex = allFlex.slice(3);
-			count += topFlex.length;
-			topFlex.forEach((flex) => score += flex);
-			allFlex = allFlex.concat(lineup.QB.slice(1));
-			allFlex.slice(0, max - count).forEach((flex) => score += flex);
+			remaining.slice(0, max - count).forEach(p => score += p.score);
+			franchise.roster = roster.concat(remaining);
 			franchise.score = score;
 
 			return franchise;
@@ -157,8 +141,8 @@ export default React.createClass({
 				<span className="depth-position depth-position-TE"></span>TE
 				<label>Depth: <select valueLink={this.linkState("depth")}>
 					<option value="starters">Starters</option>
-					<option value="ten">Starters + 3</option>
-					<option value="twelve">Starters + 5</option>
+					<option value="plus3">Starters + 3</option>
+					<option value="plus5">Starters + 5</option>
 					<option value="total">Total Depth</option>
 				</select></label>
 				<label>Ranking: <select valueLink={this.linkState("field")}>
