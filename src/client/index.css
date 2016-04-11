@@ -381,7 +381,7 @@ label:hover {
 .depth-position-RB { background-color: #71bf42; }
 .depth-position-WR { background-color: #fc6162; }
 .depth-position-TE { background-color: #9c49b6; }
-.depth-position-None { background-color: #f6f6f6; }
+.depth-position-None, .depth-position-PK, .depth-position-Def { background-color: #f6f6f6; }
 
 .depth-position-fade {
 	opacity: 0.2;
