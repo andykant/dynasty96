@@ -81,6 +81,8 @@ export default React.createClass({
 					roster.push(player || {
 						name: "N/A",
 						position: position,
+						radius: 14,
+						score: 0,
 						ranks: {
 							[field]: undefined
 						}
