@@ -217,7 +217,7 @@ gitRev.short((rev) => {
 		url: "http://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php"
 	}, (body) => {
 		var players = [];
-		var selector = /\<tr class="mpb-available.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td\>\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
+		var selector = /\<tr class="mpb-player.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td.*?\>.*?\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
 		body.replace(selector, (whole, rank, name, position, positionRank) => {
 			players.push({
 				name: name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,""),
@@ -232,7 +232,7 @@ gitRev.short((rev) => {
 		url: "http://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php"
 	}, (body) => {
 		var players = [];
-		var selector = /\<tr class="mpb-available.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td\>\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
+		var selector = /\<tr class="mpb-player.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td.*?\>.*?\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
 		body.replace(selector, (whole, rank, name, position, positionRank) => {
 			players.push({
 				name: name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,""),
@@ -247,7 +247,7 @@ gitRev.short((rev) => {
 		url: "http://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php"
 	}, (body) => {
 		var players = [];
-		var selector = /\<tr class="mpb-available.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td\>\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
+		var selector = /\<tr class="mpb-player.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td.*?\>.*?\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
 		body.replace(selector, (whole, rank, name, position, positionRank) => {
 			players.push({
 				name: name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,""),
