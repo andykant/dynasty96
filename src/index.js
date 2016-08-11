@@ -200,8 +200,8 @@ gitRev.short((rev) => {
 		}
 	}, (body) => {
 		var players = [];
-		var selector = /\<td .+?\>(.+?)\<\/td\>[\n\r]*\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td.*?style="font-size:10px;".*?\>[\n\r\s]*(.+?)[\n\r\s]*\<\/td\>[\n\r]+\<td .+?\>(.*?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>[\n\r]+\<td .+?\>(.+?)\<\/td\>/gm;
-		body.replace(selector, (whole, overall, position, name, age, rank, stddev) => {
+		var selector = /\<td .+?\>(.+?)\<\/td\>[\n\r\s]*\<td .+?\>(.+?)\<\/td\>[\n\r\s]+\<td.*?style="font-size:10px;".*?\>[\n\r\s]*(.+?)[\n\r\s]*\<\/td\>[\n\r\s]+\<td .+?\>(.*?)\<\/td\>[\n\r\s]+\<td .+?\>(.+?)\<\/td\>[\n\r\s]+\<td .+?\>([\s\S]+?)\<\/td\>[\n\r\s]+\<td .+?\>(.+?)\<\/td\>/gm;
+		body.replace(selector, (whole, overall, position, name, age, rank, change, stddev) => {
 			players.push({
 				name: name = name.replace(/\<a.*?\>/,"").replace(/\<\/a\>/,""),
 				position: position,
