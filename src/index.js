@@ -214,7 +214,9 @@ gitRev.short((rev) => {
 		return players;
 	}, load, !config.redirect && config.crawlRefreshRate);
 	crawl("fantasypros-standard", {
-		url: "https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php"
+		url: config.inSeason
+			? "https://www.fantasypros.com/nfl/rankings/ros-overall.php"
+			: "https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php"
 	}, (body) => {
 		var players = [];
 		var selector = /\<tr class="mpb-player.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td.*?\>.*?\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
@@ -229,7 +231,9 @@ gitRev.short((rev) => {
 		return players;
 	}, load, !config.redirect && config.crawlRefreshRate);
 	crawl("fantasypros-ppr", {
-		url: "https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php"
+		url: config.inSeason
+			? "https://www.fantasypros.com/nfl/rankings/ros-ppr-overall.php"
+			: "https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php"
 	}, (body) => {
 		var players = [];
 		var selector = /\<tr class="mpb-player.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td.*?\>.*?\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;
@@ -244,7 +248,9 @@ gitRev.short((rev) => {
 		return players;
 	}, load, !config.redirect && config.crawlRefreshRate);
 	crawl("fantasypros-halfppr", {
-		url: "https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php"
+		url: config.inSeason
+			? "https://www.fantasypros.com/nfl/rankings/ros-half-point-ppr-overall.php"
+			: "https://www.fantasypros.com/nfl/rankings/half-point-ppr-cheatsheets.php"
 	}, (body) => {
 		var players = [];
 		var selector = /\<tr class="mpb-player.*?"\>\<td\>(\d+)\<\/td\>[\s\n\r]*\<td.*?\>.*?\<a.*?\>(.*?)\<\/a\>.*?\<\/td\>[\s\n\r]*\<td\>(QB|RB|WR|TE)(\d+)\<\/td\>/gm;

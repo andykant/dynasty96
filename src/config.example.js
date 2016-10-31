@@ -32,5 +32,7 @@ export default {
 	// Default ranking
 	ranking: "fantasypros_halfppr",
 	// Number of teams
-	teams: 16
+	teams: 16,
+	// Whether this is in-season
+	inSeason: true
 };
