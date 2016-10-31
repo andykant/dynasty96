@@ -68,19 +68,19 @@ gitRev.short((rev) => {
 			});
 		}
 
-		// Merge DLF ADP
-		if (data.dlf && data.players && ["dlf","players"].indexOf(type) > -1) {
-			var positions = { QB: 0, RB: 0, WR: 0, TE: 0 };
-			data.dlf.forEach((player) => {
-				matchPlayer(player, (p) => {
-					p.dlf_adp = Math.round(6*player.rank);
-					p.dlf_stddev = Math.round(6*player.stddev);
-					p.age = player.age;
-					p.ranks.dlf = player.overall;
-					p.ranks.dlf_position = ++positions[p.position];
-				});
-			});
-		}
+		// // Merge DLF ADP
+		// if (data.dlf && data.players && ["dlf","players"].indexOf(type) > -1) {
+		// 	var positions = { QB: 0, RB: 0, WR: 0, TE: 0 };
+		// 	data.dlf.forEach((player) => {
+		// 		matchPlayer(player, (p) => {
+		// 			p.dlf_adp = Math.round(6*player.rank);
+		// 			p.dlf_stddev = Math.round(6*player.stddev);
+		// 			p.age = player.age;
+		// 			p.ranks.dlf = player.overall;
+		// 			p.ranks.dlf_position = ++positions[p.position];
+		// 		});
+		// 	});
+		// }
 
 		// Merge FantasyPros Ranks
 		if (data["fantasypros-standard"] && data.players && ["fantasypros-standard","players"].indexOf(type) > -1) {
