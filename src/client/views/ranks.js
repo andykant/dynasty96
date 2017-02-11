@@ -169,7 +169,7 @@ export default React.createClass({
 						<span className="depth-title-name">{franchise.name.replace(/\<.+?\>/g,"")}</span>
 					</span>
 					<span className="depth-players">
-					{franchise.roster && franchise.roster.map((p, i) => p && <span key={p.id} data-tip={p.name + " #" + (p.ranks[field] || "?") + " " + p.position + (p.ranks[field + "_position"] || "?")} className={"depth-position depth-position-" + p.position + ((1+i) > max || p.name === "N/A" ? " depth-position-fade" : "")} style={{ width: p.radius + "px", height: p.radius + "px", borderWidth: ((24 - p.radius) / 2) + "px"}}><span className={"rank-tier" + (tier(p.ranks[field + "_position"]) === "★" ? " rank-tier-elite" : "")} style={{ width: (1 + p.radius) + "px", lineHeight: (2 + p.radius) + "px"}}>{tier(p.ranks[field + "_position"])}</span></span>)}
+					{franchise.roster && franchise.roster.map((p, i) => p && <span key={franchise.id + "-" + p.id} data-tip={p.name + " #" + (p.ranks[field] || "?") + " " + p.position + (p.ranks[field + "_position"] || "?")} className={"depth-position depth-position-" + p.position + ((1+i) > max || p.name === "N/A" ? " depth-position-fade" : "")} style={{ width: p.radius + "px", height: p.radius + "px", borderWidth: ((24 - p.radius) / 2) + "px"}}><span className={"rank-tier" + (tier(p.ranks[field + "_position"]) === "★" ? " rank-tier-elite" : "")} style={{ width: (1 + p.radius) + "px", lineHeight: (2 + p.radius) + "px"}}>{tier(p.ranks[field + "_position"])}</span></span>)}
 					</span>
 				</div>
 			})}
