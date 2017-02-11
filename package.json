@@ -35,10 +35,11 @@
   },
   "devDependencies": {},
   "scripts": {
-    "prestart": "./node_modules/.bin/babel src -d lib",
-    "predev": "./node_modules/.bin/babel src -d lib",
+    "prestart": "./node_modules/.bin/babel src -d lib && npm run webpack",
+    "predev": "./node_modules/.bin/babel src -d lib && npm run webpack",
     "start": "node lib/index.js",
-    "dev": "nodemon lib/index.js"
+    "dev": "nodemon lib/index.js",
+    "webpack": "webpack --config lib/webpack.config.js"
   },
   "repository": {
     "type": "git",

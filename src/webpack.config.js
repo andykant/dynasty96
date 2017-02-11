@@ -12,7 +12,7 @@ export default {
 		ranks: config.env === "development" ? ["webpack/hot/dev-server", "webpack-dev-server/client?" + http, "./client/ranks.js"] : "./client/ranks.js"
 	},
 	output: {
-		path: path.join(__dirname, "bundle"),
+		path: path.join(__dirname, "lib/bundle"),
 		filename: "[name].js",
 		publicPath: http + "/bundle/"
 	},
