@@ -171,7 +171,7 @@ gitRev.short((rev) => {
 		if (!body.allWeeklyResults && body.allWeeklyResults.weeklyResults) return undefined;
 		var schedules = {};
 		body.allWeeklyResults.weeklyResults.forEach((week) => {
-			week && week.matchup && week.matchup.forEach((matchup) => {
+			week && week.matchup && week.matchup.forEach && week.matchup.forEach((matchup) => {
 				var a = matchup.franchise[0].id;
 				var b = matchup.franchise[1].id;
 				schedules[a] = schedules[a] || [];
