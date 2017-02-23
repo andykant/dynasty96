@@ -36,7 +36,7 @@
   "devDependencies": {},
   "scripts": {
     "prestart": "npm run webpack && ./node_modules/.bin/babel src -d lib",
-    "predev": ".npm run webpack && /node_modules/.bin/babel src -d lib",
+    "predev": "npm run webpack && ./node_modules/.bin/babel src -d lib",
     "start": "node lib/index.js",
     "dev": "nodemon lib/index.js",
     "webpack": "babel-node node_modules/.bin/webpack --config src/webpack.config.js"
