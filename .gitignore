@@ -1,5 +1,7 @@
 node_modules/
 lib/
 data/*.json
+data*/*.json
+src/bundle/
 src/config.js
 *.log
