@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import Modal from "react-modal";
 import Reflux from "reflux";
 import Actions from "../actions";
-import { Franchise, League, DraftResults, Players, Next } from "../stores";
+import { Franchise, League, DraftResults, Rosters, Players, Next } from "../stores";
 import Team from "./team";
 import Player from "./player";
 import Depth from "./depth";
@@ -15,6 +15,7 @@ export default React.createClass({
 		Reflux.connect(Franchise, "franchise"),
 		Reflux.connect(League, "league"),
 		Reflux.connect(DraftResults, "draftResults"),
+		Reflux.connect(Rosters, "rosters"),
 		Reflux.connect(Next, "next")
 	],
 
@@ -52,7 +53,7 @@ export default React.createClass({
 
 	renderFranchise: function() {
 		var franchise = this.state.franchise;
-		var IS_SPECIAL = !!franchise && SPECIAL_POWERS.indexOf(franchise.id) > -1;
+		var IS_SPECIAL = !!franchise;// && SPECIAL_POWERS.indexOf(franchise.id) > -1;
 		var next = this.state.next;
 		var showLog = this.state.showLog;
 		var draftResults = this.state.draftResults.filter((pick) => !!pick.player);
@@ -90,7 +91,7 @@ export default React.createClass({
 					<Modal isOpen={this.state.showDepth} onRequestClose={this.toggleDepth} style={{
 						overlay: { backgroundColor: "rgba(0,0,0,0.5)" }
 					}}>
-						<Depth franchise={this.state.franchise} league={this.state.league} draftResults={this.state.draftResults} />
+						<Depth franchise={this.state.franchise} league={this.state.league} draftResults={this.state.draftResults} rosters={this.state.rosters} />
 					</Modal>
 				}
 			</div>

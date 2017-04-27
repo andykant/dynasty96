@@ -21,6 +21,7 @@ export default React.createClass({
 		var league = this.props.league;
 		var draftResults = this.props.draftResults || [];
 		var mode = this.state.mode;
+		var rosters = this.props.rosters;
 		return <div className="depth">
 			<div className="depth-legend">
 				<span className="depth-position depth-position-QB"></span>QB
@@ -48,6 +49,7 @@ export default React.createClass({
 				var rating2 = 0;
 				var count = 0;
 				var count2 = 0;
+				var roster = rosters[franchise.id] || [];
 				var picks = draftResults.filter((pick) => pick.franchise === franchise.id).map((pick) => {
 					return { overall: overall(pick), player: pick.player && Players.byId(pick.player) };
 				});
@@ -62,6 +64,15 @@ export default React.createClass({
 						}
 					}
 				});
+				picks.unshift(
+					...roster
+						.map(player_id => Players.byId(player_id))
+						.sort((a,b) => a.adp - b.adp)
+						.map(player => ({
+							overall: 0,
+							player
+						}))
+				)
 				rating = count && Math.round(rating / count);
 				rating2 = count2 && Math.round(rating2 / count2);
 				return <div className={"depth-team" + (id === franchise.id ? " depth-team-mine" : "")} key={franchise.id}>
@@ -76,7 +87,7 @@ export default React.createClass({
 						{picks.map((pick) => {
 							var player = pick.player;
 							var fade = (mode === "rookies" && !player.status) || (mode === "veterans" && (player.status === "R" || !player.position));
-							return <span key={pick.overall} className={"depth-position depth-position-" + (player.position || "None") + (fade ? " depth-position-fade" : "")} data-tip={player && (player.name + " (" + pick.diff + ")")}></span>
+							return <span key={pick.overall || pick.player.id} className={"depth-position depth-position-" + (player.position || "None") + (fade ? " depth-position-fade" : "")} data-tip={player && (player.name + " (" + (pick.diff || 'owned') + ")")}></span>
 						})}
 					</span>
 				</div>
