@@ -47,68 +47,6 @@ export var DraftResults = Reflux.createStore({
 	}
 });
 
-export var Players = Reflux.createStore({
-	listenables: Actions,
-	
-	init: function() {
-		this.players = [];
-		this.listenTo(DraftResults, this.update);
-	},
-
-	getInitialState: function() {
-		return this.players;
-	},
-
-	onPlayers: function(players) {
-		this.players = players;
-		this.onSort(localStorage.getItem("sort") || "adp", true);
-		this.update();
-	},
-
-	onSort: function(column, skipTrigger) {	
-		var example = this.players[0][column];	
-		column = example !== undefined ? column : "dlf_adp";
-		if (typeof example === "string") {
-			this.players = this.players.sort((a,b) => {
-				if ((a[column] || "") > (b[column] || "")) return 1;
-				else if ((a[column] || "") < (b[column] || "")) return -1;
-				return 0;
-			});
-		}
-		else {
-			this.players = this.players.sort((a,b) => (a[column] || a.dlf_adp || a.adp || Infinity) - (b[column] || b.dlf_adp || b.adp || Infinity));
-		}
-		!skipTrigger && this.trigger(this.players);
-	},
-
-	byId: function(id) {
-		for (var i = 0; i < this.players.length; i++) {
-			if (this.players[i].id === id) {
-				return this.players[i];
-			}
-		}
-	},
-
-	update: function(draftResults) {
-		var players = this.players;
-		this.draftResults = draftResults || this.draftResults || [];
-
-		players.forEach((player) => player.left = 6);
-		this.draftResults.forEach((pick) => {
-			if (pick.player) {
-				for (var i = 0; i < players.length; i++) {
-					if (players[i].id === pick.player) {
-						players[i].left--;
-						break;
-					}
-				}
-			}
-		});
-
-		this.trigger(this.players);
-	}
-});
-
 export var Franchise = Reflux.createStore({
 	listenables: Actions,
 	
@@ -153,7 +91,7 @@ export var Rosters = Reflux.createStore({
 	
 	init: function() {
 		this.rosters = null;
-		this.listenTo(Players, this.update);
+		// this.listenTo(Players, this.update);
 	},
 
 	getInitialState: function() {
@@ -165,12 +103,75 @@ export var Rosters = Reflux.createStore({
 		this.trigger(this.rosters);
 	},
 
-	update: function() {
-		this.trigger(this.rosters);
-	},
+	// update: function() {
+	// 	this.trigger(this.rosters);
+	// },
 
 	byId: function(id) {
 		return this.rosters[id].map((playerId) => Players.byId(playerId));
+	}
+});
+
+export var Players = Reflux.createStore({
+	listenables: Actions,
+	
+	init: function() {
+		this.players = [];
+		this.listenTo(Rosters, this.update);
+	},
+
+	getInitialState: function() {
+		return this.players;
+	},
+
+	onPlayers: function(players) {
+		this.players = players;
+		this.onSort(localStorage.getItem("sort") || "adp", true);
+		this.update();
+	},
+
+	onSort: function(column, skipTrigger) {	
+		var example = this.players[0][column];	
+		column = example !== undefined ? column : "dlf_adp";
+		if (typeof example === "string") {
+			this.players = this.players.sort((a,b) => {
+				if ((a[column] || "") > (b[column] || "")) return 1;
+				else if ((a[column] || "") < (b[column] || "")) return -1;
+				return 0;
+			});
+		}
+		else {
+			this.players = this.players.sort((a,b) => (a[column] || a.dlf_adp || a.adp || Infinity) - (b[column] || b.dlf_adp || b.adp || Infinity));
+		}
+		!skipTrigger && this.trigger(this.players);
+	},
+
+	byId: function(id) {
+		for (var i = 0; i < this.players.length; i++) {
+			if (this.players[i].id === id) {
+				return this.players[i];
+			}
+		}
+	},
+
+	update: function(rosters /*draftResults*/) {
+		var players = this.players;
+		this.rosters = rosters || this.rosters || {};
+		console.log('players', rosters)
+
+		players.forEach((player) => player.left = 6);
+		Object.keys(this.rosters).forEach(franchise => {
+			this.rosters[franchise].forEach(player_id => {
+				for (var i = 0; i < players.length; i++) {
+					if (players[i].id === player_id) {
+						players[i].left--;
+						break;
+					}
+				}
+			})
+		});
+
+		this.trigger(this.players);
 	}
 });
 

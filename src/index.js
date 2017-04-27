@@ -160,7 +160,7 @@ gitRev.short((rev) => {
 			rosters[f.id] = f.player.map((p) => p.id);
 		});
 		return rosters;
-	}, load, !config.redirect && config.leagueRefreshRate);
+	}, load, !config.redirect && (config.refreshRate || config.leagueRefreshRate));
 	mfl("adp", (body) => body.adp.player.map(
 		(player) => (player.averagePick = parseFloat(player.averagePick)*6) && player
 	), load);

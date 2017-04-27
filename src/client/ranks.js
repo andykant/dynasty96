@@ -11,7 +11,7 @@ var socket = io();
 
 console.log("Dynasty96", timestamp());
 socket.on("league", (league) => Actions.league(league));
-socket.on("rosters", (rosters) => Actions.rosters(rosters));
+// socket.on("rosters", (rosters) => Actions.rosters(rosters));
 socket.on("players", (players) => Actions.players(players));
 socket.on("weeklyResults", (schedules) => Actions.schedules(schedules));
 

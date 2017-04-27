@@ -24,6 +24,7 @@ else {
 	console.log("Dynasty96", timestamp());
 	socket.on("league", (league) => Actions.league(league));
 	socket.on("players", (players) => Actions.players(players));
+	socket.on("rosters", (rosters) => Actions.rosters(rosters));
 	socket.on("draftResults", (draftResults) => Actions.draftResults(draftResults));
 	socket.on("delta", (deltas) => Actions.deltas(deltas));
 
