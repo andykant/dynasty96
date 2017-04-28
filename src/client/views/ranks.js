@@ -17,7 +17,7 @@ var DEPTH = {
 };
 
 function tier(positionRank) { 
-	if (positionRank / config.teams <= 6 / config.teams) return "★";
+	if (positionRank / config.teams <= config.copiesPerPlayer / config.teams) return "★";
 	else return positionRank ? Math.floor(positionRank / config.teams) + 1 : "?";
 };
 
@@ -109,7 +109,7 @@ export default React.createClass({
 			league.forEach((franchise) => {
 				var score = 0;
 				schedules[franchise.id].forEach((id) => {
-					score += 96 - league.indexOf(league.filter(f => f.id === id)[0]);
+					score += config.teams - league.indexOf(league.filter(f => f.id === id)[0]);
 				});
 				franchise.sos = score;
 			});

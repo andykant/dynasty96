@@ -1,7 +1,7 @@
 {
   "name": "dynasty96",
-  "version": "1.0.0",
-  "description": "Dynasty96 dynasty fantasy tools",
+  "version": "1.1.0",
+  "description": "Dynasty fantasy tools",
   "main": "lib/index.js",
   "private": true,
   "dependencies": {
@@ -48,7 +48,7 @@
     "url": "git+https://github.com/andykant/dynasty96.git"
   },
   "author": "Andy Kant <andy@andykant.com>",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/andykant/dynasty96/issues"
   },

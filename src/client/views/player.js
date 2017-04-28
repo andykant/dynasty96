@@ -1,5 +1,6 @@
 import React from "react";
 import Actions from "../actions";
+import config from "../../config";
 
 export default class Player extends React.Component {
 	handleClick(ev) {
@@ -11,7 +12,7 @@ export default class Player extends React.Component {
   render() {
   	var player = this.props;
   	var compact = this.props.compact;
-  	var left = typeof player.left !== "undefined" ? player.left : 6;
+  	var left = typeof player.left !== "undefined" ? player.left : config.copiesPerPlayer;
     return <div className={"player " + (player.className || "") + (!compact && player.left === 0 ? " player-gone" : "") + (compact ? " player-compact" : "")} onClick={player.header === true && this.handleClick}>
 			<span className="player-main">
 				{compact && player.pick && <span className="player-pick">{parseInt(player.pick.round,10) + "." + player.pick.pick}</span>}

@@ -113,7 +113,7 @@ gitRev.short((rev) => {
 			var players = {};
 			data.draftResults.forEach((result) => {
 				players[result.player] = players[result.player] || 0;
-				players[result.player] += 96 * 20 - (parseInt(result.round, 10) - 1) * 96 - parseInt(result.pick, 10);
+				players[result.player] += config.teams * 20 - (parseInt(result.round, 10) - 1) * config.teams - parseInt(result.pick, 10);
 			});
 			var ranks = [];
 			var positions = { QB: 0, RB: 0, WR: 0, TE: 0 };
@@ -162,7 +162,7 @@ gitRev.short((rev) => {
 		return rosters;
 	}, load, !config.redirect && (config.refreshRate || config.leagueRefreshRate));
 	mfl("adp", (body) => body.adp.player.map(
-		(player) => (player.averagePick = parseFloat(player.averagePick)*6) && player
+		(player) => (player.averagePick = parseFloat(player.averagePick)*config.copiesPerPlayer) && player
 	), load);
 	mfl("players", (body) => body.players.player.filter(
 		(player) => config.positions.indexOf(player.position) > -1

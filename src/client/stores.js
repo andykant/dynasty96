@@ -1,5 +1,6 @@
 import Reflux from "reflux";
 import Actions from "./actions";
+import config from "../config";
 
 export var League = Reflux.createStore({
 	listenables: Actions,
@@ -159,7 +160,7 @@ export var Players = Reflux.createStore({
 		this.rosters = rosters || this.rosters || {};
 		console.log('players', rosters)
 
-		players.forEach((player) => player.left = 6);
+		players.forEach((player) => player.left = config.copiesPerPlayer);
 		Object.keys(this.rosters).forEach(franchise => {
 			this.rosters[franchise].forEach(player_id => {
 				for (var i = 0; i < players.length; i++) {
@@ -225,7 +226,7 @@ export var Next = Reflux.createStore({
 	},
 
 	overall: function(pick) {
-		return pick ? (parseInt(pick.round,10) - 1) * 96 + parseInt(pick.pick,10) : "";
+		return pick ? (parseInt(pick.round,10) - 1) * config.teams + parseInt(pick.pick,10) : "";
 	},
 
 	update: function() {

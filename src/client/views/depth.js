@@ -2,8 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Tooltip from "react-tooltip";
 import { Players } from "../stores";
+import config from "../../config";
 
-var overall = (pick) => (parseInt(pick.round,10) - 1) * 96 + parseInt(pick.pick,10);
+var overall = (pick) => (parseInt(pick.round,10) - 1) * config.teams + parseInt(pick.pick,10);
 
 export default React.createClass({
 	getInitialState: function() {

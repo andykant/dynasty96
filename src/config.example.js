@@ -15,6 +15,8 @@ export default {
 	positions: ["QB","RB","WR","TE"],
 	// MFL Starters
 	starters: { QB: 1, RB: 1, WR: 1, TE: 1, FLEX: 3 },
+	// Copies per player
+	copiesPerPlayer: 6,
 	// MFL draft result refresh rate
 	refreshRate: 10 * 60 * 1000,
 	// MFL league refresh rate
@@ -24,11 +26,7 @@ export default {
 	// Socket.IO transports
 	transports: ["websocket", "polling"],
 	// Whether to redirect to another website
-	redirect: "http://path.to/host",
-	// DLF username
-	dlf_username: null,
-	// DLF password hash (from a cookie)
-	dlf_password: null,
+	// redirect: "http://path.to/host",
 	// Default ranking
 	ranking: "fantasypros_halfppr",
 	// Number of teams
