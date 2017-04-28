@@ -9,7 +9,7 @@ This is a Node/React based web app that provides some helpful assistance for dyn
 
 ## Notice
 
-This was a rushed 20 hour weekend project, and as such, the code quality is fairly poor and cuts a lot of corners. It's specifically designed for a 96-team league with 6 copies per player, so it may work incorrectly or not at all for other leagues.
+This was a rushed 20 hour weekend project, and as such, the code quality is fairly poor and cuts a lot of corners. It's specifically designed for a 96-team league startup with 6 copies per player, so it may work incorrectly or not at all for other leagues or non-startup drafts.
 
 This project is provided for educational purposes and has no guarantees.
 
