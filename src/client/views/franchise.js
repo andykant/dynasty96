@@ -8,8 +8,6 @@ import Team from "./team";
 import Player from "./player";
 import Depth from "./depth";
 
-var SPECIAL_POWERS = ["0066","0046","0012","0001","0041","0079","0094","0067","0021","0052","0037","0093","0025","0043","0057","0054","0027","0007","0034","0033","0026","0096","0044","0040"];
-
 export default React.createClass({
 	mixins: [
 		Reflux.connect(Franchise, "franchise"),
@@ -53,7 +51,6 @@ export default React.createClass({
 
 	renderFranchise: function() {
 		var franchise = this.state.franchise;
-		var IS_SPECIAL = !!franchise;// && SPECIAL_POWERS.indexOf(franchise.id) > -1;
 		var next = this.state.next;
 		var showLog = this.state.showLog;
 		var draftResults = this.state.draftResults.filter((pick) => !!pick.player);
@@ -67,10 +64,11 @@ export default React.createClass({
 
 		return <div className={"franchise-roster" + (showLog ? " franchise-roster-log" : "")} ref="roster" key="roster">
 			<div className="franchise-status" ref="header">
+				<a href="https://trophylife.io/" target="_blank" className="trophylife-link">
+					<div className="trophylife"><span className="trophylife-logo"/>Trophy Life</div>
+					<div className="trophylife-description">A modern real-time fantasy football hosting platform for dynasty fanatics. Coming soon!</div>
+				</a>
 				<Team {...franchise} onClick={Actions.clearFranchise} />
-				{!IS_SPECIAL && <div className="franchise-donate">
-					Was this app helpful? <a href="https://www.paypal.me/andykant/5" target="_blank">Donate!</a>
-				</div>}
 				{next && next.difference !== null && <div className="franchise-next">
 					{next.difference === 0
 						? <span className="franchise-next-draft">It's my turn to pick #{parseInt(next.nextPick.round,10) + "." + next.nextPick.pick}!</span>
@@ -86,7 +84,7 @@ export default React.createClass({
 			}
 			<div className="franchise-options" ref="footer">
 				<label><input type="checkbox" checked={showLog} onChange={this.toggleLog} />Show log</label>
-				{IS_SPECIAL && <label><input type="checkbox" checked={this.state.showDepth} onChange={this.toggleDepth} />Show depth</label>}
+				<label><input type="checkbox" checked={this.state.showDepth} onChange={this.toggleDepth} />Show depth</label>
 				{this.state.showDepth && 
 					<Modal isOpen={this.state.showDepth} onRequestClose={this.toggleDepth} style={{
 						overlay: { backgroundColor: "rgba(0,0,0,0.5)" }
@@ -103,6 +101,10 @@ export default React.createClass({
 			{this.state.franchise
 				? this.renderFranchise()
 				: <div className="franchise-list" ref="list" key="list">
+						<a href="https://trophylife.io/" target="_blank" className="trophylife-link">
+							<div className="trophylife"><span className="trophylife-logo"/>Trophy Life</div>
+							<div className="trophylife-description">A modern real-time fantasy football hosting platform for dynasty fanatics. Coming soon!</div>
+						</a>
 						{this.state.league && this.state.league.map((franchise) => <Team key={franchise.id} {...franchise} onClick={this.selectFranchise} />)}
 					</div>
 			}

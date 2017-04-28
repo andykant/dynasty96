@@ -245,13 +245,60 @@ label:hover {
 	padding: 3px 3px 0;
 }
 
-.franchise-donate,
+.trophylife-link,
 .franchise-next {
 	text-align: center;
 	margin: 10px 10px 0;
 	padding: 3px 3px 0;
 	font-size: 110%;
 	text-transform: uppercase;
+}
+
+.trophylife-ranks {
+	margin-bottom: 20px;
+}
+
+.trophylife-link {
+	margin: 0;
+	padding: 13px;
+	display: block;
+	text-decoration: none;
+	color: inherit;
+	line-height: 120%;
+	background-color: #ffc857;
+	transition: all 0.3s cubic-bezier(0.65, 0.05, 0.35, 1);
+}
+
+.trophylife-link:hover {
+	background-color: #63beff;
+	color: #fff;
+	border-color: #26a4ff;
+}
+
+.trophylife-logo {
+	background-image: url(./trophylife.svg);
+	background-position: center center;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	width: 23.46px;
+	height: 25.6px;
+	display: inline-block;
+	margin-top: -3px;
+	vertical-align: middle;
+	margin-right: 7px;
+}
+
+.trophylife {
+	font-family: "grueber", sans-serif;
+	font-size: 16px;
+	font-weight: 300;
+	text-transform: uppercase;
+	line-height: 22.4px;
+}
+
+.trophylife-description {
+	font-size: 80%;
+	text-transform: none;
 }
 
 .franchise-roster-log .franchise-donate,

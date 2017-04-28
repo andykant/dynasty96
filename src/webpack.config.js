@@ -19,7 +19,8 @@ export default {
 	module: {
 		loaders: [
 			{ test: /\.js$/, exclude: /node_modules/, loader: "babel" },
-			{ test: /\.css$/, exclude: /node_modules/, loader: "style!css" }
+			{ test: /\.css$/, exclude: /node_modules/, loader: "style!css" },
+			{ test: /\.svg$/, exclude: /node_modules/, loader: "url" }
 		]
 	},
 	plugins: config.env === "development" ? [new webpack.HotModuleReplacementPlugin()] : []
