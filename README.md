@@ -43,6 +43,7 @@ npm run dev
 
 - Copy `config.example.js` as `config.js`. The example config provides descriptions of each property along with example values.
 - Update `config.js` with options for your league.
+- Set `inSeason` to `true` during the NFL season, and to `false` outside of it. This ensures that it picks up the correct FantasyPros rankings.
 - That's it.
 
 ## License
