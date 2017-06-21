@@ -1,6 +1,6 @@
 {
   "name": "dynasty96",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Dynasty fantasy tools",
   "main": "lib/index.js",
   "private": true,

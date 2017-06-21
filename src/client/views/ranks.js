@@ -18,7 +18,7 @@ var DEPTH = {
 
 function tier(positionRank) { 
 	if (positionRank / config.teams <= config.copiesPerPlayer / config.teams) return "★";
-	else return positionRank ? Math.floor(positionRank / config.teams) + 1 : "?";
+	else return positionRank ? Math.floor(positionRank * config.copiesPerPlayer / config.teams) + 1 : "?";
 };
 
 export default React.createClass({

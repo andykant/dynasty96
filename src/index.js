@@ -168,7 +168,7 @@ gitRev.short((rev) => {
 		(player) => config.positions.indexOf(player.position) > -1
 	), load);
 	mfl("weeklyResults", (body) => {
-		if (!body.allWeeklyResults && body.allWeeklyResults.weeklyResults) return undefined;
+		if (!body.allWeeklyResults || !body.allWeeklyResults.weeklyResults) return undefined;
 		var schedules = {};
 		body.allWeeklyResults.weeklyResults.forEach((week) => {
 			week && week.matchup && week.matchup.forEach && week.matchup.forEach((matchup) => {
