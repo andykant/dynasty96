@@ -182,7 +182,7 @@ gitRev.short((rev) => {
 		});
 		return schedules;
 	}, load, !config.redirect && config.leagueRefreshRate, true);
-	mfl("draftResults", (body) => body.draftResults.draftUnit.draftPick.map(
+	mfl("draftResults", (body) => (body.draftResults.draftUnit.draftPick || []).map(
 		(pick) => { pick.timestamp = parseInt(pick.timestamp,10) || 0; return pick; }
 	), load, !config.redirect && config.refreshRate);
 	crawl("dlf", {
