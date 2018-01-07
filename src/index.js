@@ -157,7 +157,7 @@ gitRev.short((rev) => {
 	mfl("rosters", (body) => {
 		var rosters = {};
 		body.rosters.franchise.forEach((f) => {
-			rosters[f.id] = (f.player || []).map((p) => p.id);
+			rosters[f.id] = (f.player instanceof Array ? f.player : f.player ? [f.player] : []).map((p) => p.id);
 		});
 		return rosters;
 	}, load, !config.redirect && (config.refreshRate || config.leagueRefreshRate));
