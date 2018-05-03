@@ -66,7 +66,7 @@ export default React.createClass({
 			<div className="franchise-status" ref="header">
 				<a href="https://trophylife.io/" target="_blank" className="trophylife-link">
 					<div className="trophylife"><span className="trophylife-logo"/>Trophy Life</div>
-					<div className="trophylife-description">A modern real-time fantasy football hosting platform for dynasty fanatics. Coming soon!</div>
+					<div className="trophylife-description">A modern real-time fantasy football hosting platform for dynasty fanatics. Coming eventually...</div>
 				</a>
 				<Team {...franchise} onClick={Actions.clearFranchise} />
 				{next && next.difference !== null && <div className="franchise-next">
@@ -103,7 +103,7 @@ export default React.createClass({
 				: <div className="franchise-list" ref="list" key="list">
 						<a href="https://trophylife.io/" target="_blank" className="trophylife-link">
 							<div className="trophylife"><span className="trophylife-logo"/>Trophy Life</div>
-							<div className="trophylife-description">A modern real-time fantasy football hosting platform for dynasty fanatics. Coming soon!</div>
+							<div className="trophylife-description">A modern real-time fantasy football hosting platform for dynasty fanatics. Coming eventually...</div>
 						</a>
 						{this.state.league && this.state.league.map((franchise) => <Team key={franchise.id} {...franchise} onClick={this.selectFranchise} />)}
 					</div>
