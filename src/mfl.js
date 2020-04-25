@@ -17,7 +17,9 @@ export default function get(type, parse, callback, refreshRate, forceParse) {
 	else {
 		console.log("Loading MFL API: " + type + " (" + Date.now() + ")");
 		request.get({
-			url: "http://" + config.leagueHost + ".myfantasyleague.com/" + config.year + "/export?TYPE=" + type + "&JSON=1&FRANCHISES=16&W=YTD&L=" + config.league, 
+			url: type === 'adp' 
+				? "https://api.myfantasyleague.com/" + config.year + "/export?TYPE=" + type + "&JSON=1&FRANCHISES=16"
+				: "http://" + config.leagueHost + ".myfantasyleague.com/" + config.year + "/export?TYPE=" + type + "&JSON=1&FRANCHISES=16&W=YTD&L=" + config.league, 
 			json: true
 		}, (e, r, body) => {
 			if ((body[type] || (forceParse && body)) && (body = parse(body))) {
