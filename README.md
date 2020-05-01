@@ -3,9 +3,9 @@
 This is a Node/React based web app that provides some helpful assistance for dynasty leagues, especially those with multiple copies per player. This app integrates directly with MFL APIs to provide real-time draft updates and franchise rankings.
 
 - **Draft Companion** provides an overview of the current draft status, depth charts, list of remaining player copies, as well as estimates for who might be available for a franchise's draft picks.
-  - See [http://companion.onside.io/](http://companion.onside.io/) for an example.
+  - `http://HOST/`
 - **Franchise Rankings** provides depth charts and franchise rankings based on FantasyPros player rankings.
-  - See [http://companion.onside.io/ranks](http://companion.onside.io/ranks) for an example.
+  - `http://HOST/ranks`
 
 ## Notice
 
